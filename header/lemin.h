@@ -24,10 +24,10 @@
 # include <stdio.h>
 
 typedef struct  s_lemlist
-{
-	int 			info;
-	char			*name;
-	char			**data;
+{	
+	int 				info;
+	char				*name;
+	char				**data;
 	struct s_lemlist 	*next;
 	struct s_lemlist	*previous;
 	
