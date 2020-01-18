@@ -38,6 +38,9 @@ typedef struct	s_struct
 	int		fd;
 	int		ants;
 
+	bool	start;
+	bool	end;
+
 	int		node;
 	int		*graph;
 	int		src[2];

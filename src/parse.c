@@ -16,12 +16,48 @@
 **	get start node and end node infos !!!to do 
 */
 
+int create_hash_table(t_struct *u)
+{
+	//create hash table of connections
+}
+
+int node_connection(char *line)
+{
+	//check the format N-N
+	return (0);
+}
+
+void add_node(t_struct *u /*+ node*/)
+{
+	//add the node in param to the linked list
+}
+
+void create_node(char *line, t_struct *u)
+{
+	//save data in the struct and add it to node list
+}
+
+int check_node(char *line)
+{
+	///check the format name %d %d is correct
+	return (0);
+}
+
 int start_or_end(char *line, t_struct *u)
 {
-	if (ft_strcmp(line + 2, "start"))
-		printf("ok\n");
-	else if (ft_strcmp(line + 2, "end"))
-		printf("end\n");
+	if (ft_strcmp(line + 2, "start") && u->start = 0)
+	{
+		printf("parse start\n");
+		create_node(u);
+		u->start = 1;
+	}
+
+	else if (ft_strcmp(line + 2, "end") && u->end = 0)
+	{
+		printf("parse end\n");
+		create_node(u);
+		u->end = 1;
+	}
 	return (0);
 }
 
