@@ -23,12 +23,35 @@
 # include "../includes/libft/get_next_line.h"
 # include <stdio.h>
 
+typedef struct s_node;
+{
+	//coordinates
+	int x;
+	int y;
+	//name of the node
+	char *name;
+
+	//maybe
+	//how many connection a node has
+	int nb_connections;
+	//connections to other nodes
+	char **connected_to;
+	//temporary number (to use instead of the name ????)
+	double tmp_id; //need to figure out how to generate it
+
+}				t_node;
+
 typedef struct  s_lemlist
 {	
+	//??????????????????maybe
 	int 				info;
-	char				*name;
+	//node that contains parsed infos
+	t_node				*node;
+	///table of value for the node ????
 	char				**data;
+	//link to the next one
 	struct s_lemlist 	*next;
+	//link to the previous one ???
 	struct s_lemlist	*previous;
 	
 }				t_lemlist;		
@@ -36,10 +59,16 @@ typedef struct  s_lemlist
 typedef struct	s_struct
 {
 	int		fd;
-	int		ants;
 
+	//total nb of ants
+	int		ants;
+	//mark if start/end parsed, if 0, invalid map
 	bool	start;
 	bool	end;
+	//if end or start have only 1 connection, value = 0 else 1
+	bool	multi_sol;
+	//current direction to optimise
+	int 	direction;
 
 	int		node;
 	int		*graph;
@@ -51,6 +80,7 @@ typedef struct	s_struct
 	int		i;
 	int		v;
 	t_lemlist	*list;
+	t_node		*node;
 }				t_struct;
 
 int parse(char *av, t_struct *u);
