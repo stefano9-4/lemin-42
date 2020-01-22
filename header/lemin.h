@@ -25,6 +25,8 @@
 
 typedef struct s_node;
 {
+	//index node
+	int cnt;
 	//coordinates
 	int x;
 	int y;
@@ -42,24 +44,26 @@ typedef struct s_node;
 }				t_node;
 
 typedef struct  s_lemlist
-{	
+{
 	//??????????????????maybe
 	int 				info;
 	//node that contains parsed infos
-	t_node				*node;
+	t_node				node;
 	///table of value for the node ????
 	char				**data;
 	//link to the next one
 	struct s_lemlist 	*next;
 	//link to the previous one ???
 	struct s_lemlist	*previous;
-	
-}				t_lemlist;		
+
+}				t_lemlist;
 
 typedef struct	s_struct
 {
 	int		fd;
 
+	//index of elem for chained list
+	int 	index;
 	//total nb of ants
 	int		ants;
 	//mark if start/end parsed, if 0, invalid map
@@ -70,6 +74,8 @@ typedef struct	s_struct
 	//current direction to optimise
 	int 	direction;
 
+	char 	*t_name1;
+	char	*t_name2;
 	int		node;
 	int		*graph;
 	int		src[2];

@@ -84,6 +84,7 @@ int		main(int ac, char **av)
 	u.node = 5;
 
 	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
-		parse(av[1], &u);
+		if (!(parse(av[1], &u)))
+			printf("ERROR\n");
 	u.graph = (int*)malloc(sizeof(int) * u.node * u.node * 2);
 }
