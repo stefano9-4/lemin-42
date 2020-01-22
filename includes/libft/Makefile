@@ -6,7 +6,7 @@
 #    By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/01 19:14:42 by spozzi            #+#    #+#              #
-#    Updated: 2019/12/01 19:14:44 by spozzi           ###   ########.fr        #
+#    Updated: 2020/01/22 13:39:11 by lutomasz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ SRC = ft_memalloc.c ft_memdel.c ft_strnew.c ft_strdel.c ft_strclr.c \
 	  ft_isprint.c ft_toupper.c ft_tolower.c ft_lstnew.c ft_lstdelone.c \
 	  ft_lstdel.c ft_lstadd.c ft_lstiter.c ft_print_tab2.c ft_lstmap.c \
 	  get_next_line.c atoi_tab2.c print_int2.c ft_swap.c tab2_cpy.c \
-	  malloc_2d_int.c
+	  malloc_2d_int.c ft_strndup.c
 FLAGS = -Wall -Werror -Wextra
 
 OBJ = $(SRC:.c=.o)

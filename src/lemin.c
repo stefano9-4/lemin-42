@@ -80,11 +80,13 @@
 
 int		main(int ac, char **av)
 {
-	t_struct	u;
-	u.node = 5;
+	t_struct	*u;
 
-	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
-		if (!(parse(av[1], &u)))
+	u = (t_struct*)malloc(sizeof(t_struct));
+	u->node = 5;
+
+	if (ac == 2 && ((u->fd = open(av[1], O_RDONLY)) != 0))
+		if (!(parse(av[1], u)))
 			printf("ERROR\n");
-	u.graph = (int*)malloc(sizeof(int) * u.node * u.node * 2);
+	u->graph = (int*)malloc(sizeof(int) * u->node * u->node * 2);
 }

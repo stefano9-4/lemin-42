@@ -19,11 +19,12 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <stdbool.h> 
 # include "../includes/libft/libft.h"
 # include "../includes/libft/get_next_line.h"
 # include <stdio.h>
 
-typedef struct s_node;
+typedef struct s_node
 {
 	//index node
 	int cnt;
@@ -85,8 +86,7 @@ typedef struct	s_struct
 	int		*q;
 	int		i;
 	int		v;
-	t_lemlist	*list;
-	t_node		*node;
+	t_lemlist	*lemlist;
 }				t_struct;
 
 int parse(char *av, t_struct *u);
