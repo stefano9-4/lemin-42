@@ -170,12 +170,13 @@ void create_node(char *line, t_struct *u)
 	{
 		i++;
 	}
+	printf(" RIGHT NAME ISSSSS %.1s\n", line);
 	new->name = strndup(line, i);
 	line += i;
 	while (*line == ' ' || *line == '\t')
 		line++;
 	new->x = ft_atoi(line);
-	//printf("@@@@@@@@@@@@@@@@@@@@@@@@ %s\n", new->name);
+	printf("got @@@@@@@@@@@@@@@@@@@@@@@@ %s\n", new->name);
 	while (ft_isdigit(*line))
 		line++;
 	new->y = ft_atoi(line);
