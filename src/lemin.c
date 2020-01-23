@@ -14,7 +14,7 @@
 
 // int		offset(t_struct u, int x, int y, int z)
 // {
-// 	return (z * u.node * u.node) + (y * u.node) + x;
+// 	return (z * u.nodes * u.nodes) + (y * u.nodes) + x;
 // }
 
 // int		is_q_empty(int *q)
@@ -57,11 +57,11 @@
 
 // int		dijkstra(t_struct *u)
 // {
-// 	u->dist = (int*)malloc(sizeof(int) * u->node);
-// 	u->prev = (int*)malloc(sizeof(int) * u->node);
-// 	u->q = (int*)malloc(sizeof(int) * u->node);
+// 	u->dist = (int*)malloc(sizeof(int) * u->nodes);
+// 	u->prev = (int*)malloc(sizeof(int) * u->nodes);
+// 	u->q = (int*)malloc(sizeof(int) * u->nodes);
 // 	u->i = -1;
-// 	while (++u->i < u->node)
+// 	while (++u->i < u->nodes)
 // 	{
 // 		u->dist[u->i] = INT_MAX;
 // 		u->prev[u->i] = -1;
@@ -80,13 +80,13 @@
 
 int		main(int ac, char **av)
 {
-	t_struct	*u;
+	t_struct	u;
 
-	u = (t_struct*)malloc(sizeof(t_struct));
-	u->node = 5;
+	//u = (t_struct*)malloc(sizeof(t_struct));
+	u.nodes = 5;
 
-	if (ac == 2 && ((u->fd = open(av[1], O_RDONLY)) != 0))
-		if (!(parse(av[1], u)))
+	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
+		if (!(parse(av[1], &u)))
 			printf("ERROR\n");
-	u->graph = (int*)malloc(sizeof(int) * u->node * u->node * 2);
+	u.graph = (int*)malloc(sizeof(int) * u.nodes * u.nodes * 2);
 }
