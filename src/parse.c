@@ -12,338 +12,110 @@
 
 #include "lemin.h"
 
-
-// t_node		*new_object(void *inf, int id)
-// {
-// 	t_obj *new;
-
-// 	if (!(new = (t_obj *)malloc(sizeof(*new))))
-// 		return (NULL);
-// 	new->obj = inf;
-// 	new->id = id;
-// 	new->next = NULL;
-// 	return (new);
-// }
-
-void		add_node(t_node **list, t_node *new)
+int	parse(char *av, t_struct *u)
 {
-	if (!*list && new)
-	{
-		*list = new;
-		return ;
-	}
-	if (*list && new)
-	{
-		new->next = *list;
-		*list = new;
-	}
-	printf("OBJ ADDED\n");
-}
+	char	*line;
+	int		i_id;
+	int		cnt;
+	//	id is the id of node in u->id
+	int		id1;
+	int		id2;
 
-void		add_cons(t_cons **list, t_cons *new)
-{
-	if (!*list && new)
-	{
-		*list = new;
-		return ;
-	}
-	if (*list && new)
-	{
-		new->next = *list;
-		*list = new;
-	}
-	printf("CON ADDED\n");
-}
-/*
-**	get start node and end node infos !!!to do
-*/
-
-int create_hash_table(t_struct *u)
-{
-	return (1);
-	//create hash table of connections
-}
-
-
-//fails to send the rightt value
-int check_connection(char *line, t_struct *u)
-{
-	//check the format N-N
-	//go through the name list and check if valid ????????
-	//format name-name
-	int i;
-	int x;
-	int ptr;
-	t_node *next;
-	t_node *next2;
-
-
-	next = (t_node*)malloc(sizeof(next));
-	next2 = (t_node*)malloc(sizeof(next2));
-	i = 0;
-	while (ft_isdigit(line[i]) || ft_isalpha(line[i]))
-		i++;
-	x = 0;
-	u->t_name1 = ft_strndup(line, i);
-	while (u->node != NULL)
-	{
-		next = u->node->next;
-			if (ft_strncmp(line, u->node->name, i) == 0)
-				break ;
-		u->node = next;
-
-	}
-	line += i;
-	if (*line != '-')
-		return (0);
-	line++;
-	i++;
-	ptr = i;
-	while (ft_isdigit(line[i]) || ft_isalpha(line[i]))
-		i++;
-	u->t_name2 = ft_strndup(line, i);
-	//doesnt send the right value >>>>>
-	u->node = u->first;
-	while (u->node != NULL)
-	{
-		printf("DHSDHJFDJFJDFJDHFJKKJKSHDSDHJSJKDS\n");
-		next2 = u->node->next;
-			if (ft_strncmp(line, u->node->name, i) == 0)
-				return (1);
-		u->node = next2;
-	}
-	return (1);
-}
-
-void add_connection(char *line, t_struct *u /*+ node*/)
-{
-	t_cons *next;
-	t_cons *next2;
-	t_node	*plus;
-
-	plus = (t_node*)malloc(sizeof(plus));
-	next = (t_cons*)malloc(sizeof(next));
-	next2 = (t_cons*)malloc(sizeof(next2));
-	u->node = u->first;
-	while (u->node != NULL)
-	{
-		plus = u->node->next;
-		printf("NAME %s\n", u->t_name1);
-		printf("NAME %s\n", u->t_name2);
-		printf("NAME2 %s\n", u->node->name);
-		printf("NAME2 %s\n", u->node->name);
-		if (ft_strcmp(u->t_name1, u->node->name) == 0)
-		{
-				printf("hey1111\n");
-				u->node->nb_connections++;
-				//u->node->connected_to[u->node->nb_connections] = ft_strdup(u->t_name2);
-				add_cons(&u->node->links, next);
-		}
-		if (ft_strcmp(u->t_name2, u->node->name) == 0)
-		{
-				printf("hey222222\n");
-				u->node->nb_connections++;
-			//	u->node->connected_to[u->node->nb_connections] = ft_strdup(u->t_name1);
-				add_cons(&u->node->links, next);
-		}
-		u->node = plus;
-	}
-	// free(u->t_name1);
-	// free(u->t_name2);
-	//add the node in param to the linked list
-}
-
-
-//problem with name
-void create_node(char *line, t_struct *u)
-{
-	//save data in the struct and add it to node list
-	t_node 	*new;
-	int i;
-
-	new = (t_node *)malloc(sizeof(new));
-	i = 0;
-	///check the format %sname %d %d is correct
-	while (*line == ' ' || *line == '\t')
-		line++;
-	while (ft_isdigit(line[i]) || ft_isalpha(line[i]))
-	{
-		i++;
-	}
-	printf(" RIGHT NAME ISSSSS %.1s\n", line);
-	new->name = strndup(line, i);
-	line += i;
-	while (*line == ' ' || *line == '\t')
-		line++;
-	new->x = ft_atoi(line);
-	printf("got @@@@@@@@@@@@@@@@@@@@@@@@ %s\n", new->name);
-	while (ft_isdigit(*line))
-		line++;
-	new->y = ft_atoi(line);
-	new->cnt = ++u->index;
-	new->nb_connections = -1;
-	new->connected_to = (char**)malloc(sizeof(char*));
-	//u->info = u->index;
-	new->next = NULL;
-	new->links = NULL;
-	// printf("char = %c\n", *line);
-	// printf("CHECK_NODE\n");
-	// printf("line = %s\n", line);
-	add_node(&u->node, new);
-}
-
-//should do additional checks for validity ?????
-
-int check_node(char *line, t_struct *u)
-{
-	int i;
-	int cnt;
-	char *tab;
-
+	i_id = 0;
 	cnt = 0;
-	i = 0;
-	///check the format %sname %d %d is correct
-	while ((*line == ' ' || *line == '\t') && i++)
-	{
-		line++;
-		i++;
-	}	
-	cnt = i;
-	if (!ft_isdigit(*line) && !ft_isalpha(*line))
-	{
-		printf("DJSDSHJDS\n");
-		return (0);
-	}
-	while ((ft_isdigit(line[i]) || ft_isalpha(line[i])))
-		i++;
-	line += i;
-	while (*line && (*line == ' ' || *line == '\t'))
-		line++;
-	if (!*line || !ft_isdigit(*line))
-			return (0);
-	while (*line && ft_isdigit(*line))
-		line++;
-	if (!(line[1] >= '0' && line [1] <= '9'))
-	{
-		printf("BLOCK CHECK_NODE\n");
-		return (0);
-	}	
-	return (1);
-}
-
-
-//has to create an elem + add to the list
-int start_or_end(char *line, t_struct *u)
-{
-	//printf("LINE == %s\n", line);
-	if (u->start == 1 && u->end == 1)
-	{
-		ft_putstr("too many edges, error!\n");
-		return (0);
-	}
-	else if ((ft_strcmp(line + 2, "start") == 0) && u->start == 0)
-	{
-		free(line);
-		get_next_line(u->fd, &line);
-		printf("%d\n", u->ants);
-		printf("parse start\n");
-		//check_node(line, u);
-		create_node(line, u);
-		++u->start;
-		u->first = u->node;
-	}
-
-	else if ((ft_strcmp(line + 2, "end") == 0) && u->end == 0 )
-	{
-		free(line);
-		get_next_line(u->fd, &line);
-		printf("parse end\n");
-		//check_node(line, u);
-		create_node(line, u);
-		++u->end;
-	}
-	else
-	{
-		ft_putstr("START END FORMAT ERROR\n");
-		return (0);
-	}
-	return (1);
-}
-
-int parse(char *argv, t_struct *u)
-{
-	int i;
-	char *line;
-
-	//index of elem;
-	u->index = -1;
-	u->start = 0;
-	u->end = 0;
-	i = 0;
 	get_next_line(u->fd, &line);
-	while (!ft_isdigit(line[0]))
-	{
-		free(line);
-		get_next_line(u->fd, &line);
-	}
 	u->ants = ft_atoi(line);
-	free(line);
 	while (get_next_line(u->fd, &line))
 	{
-		printf("TOUR === %d\n", i);
-		if (line && line[0] == '#')
+		u->i = -1;
+		// if ##start or ##end
+		if (line[0] == '#' && line[1] == '#')
 		{
-			if (line[1] == '#') // == double ##, start, end ??
-			{
-				if (!(start_or_end(line, u)))
-					return (0);
-			
-			}
-			else //== normal comment
-			{
-				printf("comment found\n");
-				free(line);
-			}
+			if (ft_strcmp(line, "##start") == 0)
+				u->src = cnt;
+			else if (ft_strcmp(line, "##end") == 0)
+				u->snk = cnt;
 		}
-		else //if != #
+		// Get node name, X, Y
+		else if (line[0] != '#' && has_space(line))
 		{
-			printf("here\n");
-			printf("%s\n", line);
-			if (check_node(line, u) == 1) //if new node
-			{
-			//	break ;
-				printf("CREATING NODE\n" );
-				create_node(line, u);
-			}
-			else if (check_connection(line, u)) //or connection ??
-			{
-					printf("CREATING connection\n");
-					//create_hash_table(u);
-					add_connection(line, u);
-					//free(line);
-			}
-			else //different ?? (error ?)
-			{
-				printf("NOTHING\n");
-				break ;
-			}
-			//free(line);
-			printf("INFINITE LOOP\n");
+			while (line[++u->i] != ' ')
+				u->id[i_id++] = line[u->i];
+			u->id[i_id++] = ' ';
+			u->coor[cnt] = ft_atoi(line + u->i);
+			while (line[++u->i] != ' ')
+				;
+			u->coor[cnt + u->num_nodes] = ft_atoi(line + u->i);
+			cnt++;
 		}
-		i++;
+		// get connections
+		else if (line[0] != '#' && cnt == u->num_nodes)
+		{
+			while (line[++u->i] != '-')
+				;
+			u->j = -1;
+			id1 = 0;
+			while (u->id[++u->j])
+			{
+				if (ft_strncmp(line, &u->id[u->j], u->i) == 0)
+					break;
+				while (u->id[++u->j] != ' ' && u->id[u->j])
+					;
+				id1++;
+			}
+			u->k = -1;
+			id2 = 0;
+			u->len = ft_strlen(line + u->i + 1);
+			while (u->id[++u->k])
+			{
+				if (ft_strncmp(line + u->i + 1, &u->id[u->k], u->len) == 0)
+					break;
+				while (u->id[++u->k] != ' ' && u->id[u->k])
+					;
+				++id2;
+			}
+			u->graph[get_offset_2d(u, id1, id2)] = 1;
+			u->graph[get_offset_2d(u, id2, id1)] = 1;
+		}
 	}
+	int i = -1;
+	printf("ID: %s\n", u->id);
+	while (++i < (u->num_nodes))
+	{
+		int j = -1;
+		while (++j < u->num_nodes)
+			printf("%d ", u->graph[get_offset_2d(u, i, j)]);
+		printf("\n");
+	}
+	u->id[i_id - 1] = '\0';
+}
 
-	//BULLSHIT ?
-	// while (get_next_line(u->fd, &line))
-	// {
-	// 	if (line[0] == '#')
-	// 		free(line);
-	// 	else
-	// 	{
-	// 		if (connection_format(u))
-	// 			add_to_hash(u);
-	// 		free(line);
-	// 	}
-	// }
+
+int set_dimentions(char *av, t_struct *u)
+{
+	size_t	cnt_char;
+	char	*line;
+
+	cnt_char = 0;
+	u->num_nodes = 0;
+	get_next_line(u->fd, &line);
+	while (get_next_line(u->fd, &line))
+	{
+		if (line[0] != '#' && !has_space(line))
+			break;
+		else if (line[0] != '#' && ++u->num_nodes)
+		{
+			u->i = -1;
+			while (line[++u->i] != ' ')
+				++cnt_char;
+		}
+	}
+	u->id = ft_strnew(cnt_char + u->num_nodes);
+	u->graph = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
+	set_zeros(u, u->num_nodes * u->num_nodes);
+	u->coor = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
+	if (!u->id || !u->graph || !u->coor)
+		return (0);
 	return (1);
 }
+

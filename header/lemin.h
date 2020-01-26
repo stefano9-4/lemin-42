@@ -88,14 +88,23 @@ typedef struct	s_struct
 
 	char 	*t_name1;
 	char	*t_name2;
-	int		nodes;
+	int		num_nodes;
+
+	// dim 0: a to b
+	// dim 1: b to a
+	// dim 2: weight
 	int		*graph;
-	int		src[2];
-	int		snk[2];
+	char	*id;
+	int		*coor;
+	int		src;
+	int		snk;
 	int		*dist;
 	int		*prev;
 	int		*q;
 	int		i;
+	int		j;
+	int		k;
+	int		len;
 	int		v;
 	t_node	*first;
 
@@ -104,6 +113,11 @@ typedef struct	s_struct
 	//t_lemlist	*lemlist;
 }				t_struct;
 
-int parse(char *av, t_struct *u);
+int		parse(char *av, t_struct *u);
+int		set_dimentions(char *av, t_struct *u);
+int		get_offset_2d(t_struct *u, int x, int y);
+int		has_space(char *str);
+void	print_graph(t_struct *u);
+void	set_zeros(t_struct *u, int size);
 
 #endif

@@ -12,7 +12,7 @@
 
 NAME = lem_in
 
-SRC_NAME = lemin.c parse.c
+SRC_NAME = lemin.c parse.c utils.c
 
 SRC_PATH = src/
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))
