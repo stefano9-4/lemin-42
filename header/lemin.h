@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:51:42 by spozzi            #+#    #+#             */
-/*   Updated: 2020/01/14 12:43:04 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/01/27 15:18:55 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,26 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-# include <stdbool.h> 
+# include <stdbool.h>
 # include "../includes/libft/libft.h"
 # include "../includes/libft/get_next_line.h"
 # include <stdio.h>
+
+typedef	struct	s_node
+{
+	int				key;
+	char			*name;
+	int				has_ant;
+	int				prev;
+	int				isVisited;
+	struct s_node	*next;
+}				t_node;
+
+typedef	struct 	s_table
+{
+	int		size;
+	t_node	**list;
+}				t_table;
 
 typedef struct	s_struct
 {
@@ -49,6 +65,7 @@ typedef struct	s_struct
 	// dim 2: weight
 	int		*graph;
 	char	*id;
+	t_table	*hm;
 	int		*coor;
 	int		src;
 	int		snk;
@@ -70,5 +87,11 @@ int		get_offset_2d(t_struct *u, int x, int y);
 int		has_space(char *str);
 void	print_graph(t_struct *u);
 void	set_zeros(t_struct *u, int size);
+char	*hm_lookup(t_table *t, int key);
+void	hm_insert(t_table *t, int key, char *name);
+t_table	*createHashMap(int size);
+void	print_stuff(t_struct *u);
+int		hashCode(t_table *t, int key);
+void	bfs(t_struct *u);
 
 #endif

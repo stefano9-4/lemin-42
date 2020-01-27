@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lutomasz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 09:20:06 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/01/18 09:20:09 by lutomasz         ###   ########.fr       */
+/*   Updated: 2020/01/27 16:22:02 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,14 @@ int	parse(char *av, t_struct *u)
 	int		i_id;
 	int		cnt;
 	//	id is the id of node in u->id
-	int		id1;
-	int		id2;
+	int		key1;
+	int		key2;
+	//	store name of room;
+	char 	*str;
 
 	i_id = 0;
 	cnt = 0;
+	u->hm = createHashMap(u->num_nodes);
 	get_next_line(u->fd, &line);
 	free(line);
 	u->ants = ft_atoi(line);
@@ -41,13 +44,9 @@ int	parse(char *av, t_struct *u)
 		else if (line[0] != '#' && has_space(line))
 		{
 			while (line[++u->i] != ' ')
-				u->id[i_id++] = line[u->i];
-			u->id[i_id++] = ' ';
-			u->coor[cnt] = ft_atoi(line + u->i);
-			while (line[++u->i] != ' ')
 				;
-			u->coor[cnt + u->num_nodes] = ft_atoi(line + u->i);
-			cnt++;
+			str = ft_strndup(line, u->i);
+			hm_insert(u->hm, cnt++, str);
 		}
 		// get connections
 		else if (line[0] != '#' && cnt == u->num_nodes)
@@ -55,45 +54,35 @@ int	parse(char *av, t_struct *u)
 			while (line[++u->i] != '-')
 				;
 			u->j = -1;
-			id1 = 0;
-			while (u->id[++u->j])
+			key1 = 0;
+			while (++u->j < u->num_nodes)
 			{
-				if (ft_strncmp(line, &u->id[u->j], u->i) == 0)
+				str = hm_lookup(u->hm, u->j);
+				if (ft_strncmp(line, str, u->i) == 0)
 					break;
-				while (u->id[++u->j] != ' ' && u->id[u->j])
-					;
-				id1++;
+				key1++;
 			}
 			u->k = -1;
-			id2 = 0;
+			key2 = 0;
 			u->len = ft_strlen(line + u->i + 1);
-			while (u->id[++u->k])
+			while (++u->k < u->num_nodes)
 			{
-				if (ft_strncmp(line + u->i + 1, &u->id[u->k], u->len) == 0)
+				str = hm_lookup(u->hm, u->k);
+				if (ft_strncmp(line + u->i + 1, str, u->len) == 0)
 					break;
-				while (u->id[++u->k] != ' ' && u->id[u->k])
-					;
-				++id2;
+				++key2;
 			}
-			u->graph[get_offset_2d(u, id1, id2)] = 1;
-			u->graph[get_offset_2d(u, id2, id1)] = 1;
+			u->graph[get_offset_2d(u, key1, key2)] = 1;
+			u->graph[get_offset_2d(u, key2, key1)] = 1;
 		}
 		free(line);
 	}
-	int i = -1;
-	printf("ID: %s\n", u->id);
-	while (++i < (u->num_nodes))
-	{
-		int j = -1;
-		while (++j < u->num_nodes)
-			printf("%d ", u->graph[get_offset_2d(u, i, j)]);
-		printf("\n");
-	}
+	print_stuff(u);
 	u->id[i_id - 1] = '\0';
+	return (1);
 }
 
-
-int set_dimentions(char *av, t_struct *u)
+int		set_dimentions(char *av, t_struct *u)
 {
 	size_t	cnt_char;
 	char	*line;
@@ -123,4 +112,3 @@ int set_dimentions(char *av, t_struct *u)
 		return (0);
 	return (1);
 }
-

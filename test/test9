@@ -10,8 +10,8 @@ room6 8 3
 room7 0 8
 room8 4 3
 ##end
-end 3 5
 room9 8 2
+end 3 5
 start-room1
 room1-room2
 room2-room3
@@ -22,4 +22,3 @@ room6-room7
 room7-room8
 room8-room9
 room9-end
-

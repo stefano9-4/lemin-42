@@ -6,96 +6,11 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:46:38 by spozzi            #+#    #+#             */
-/*   Updated: 2020/01/15 13:12:31 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/01/27 16:02:44 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
-
-int		is_q_empty(int *q)
-{
-	int		i;
-
-	i = -1;
-	while (q[++i])
-		if (q[i] != 0)
-			return (0);
-	return (1);
-}
-
-int		find_min_dist(int *q, int *dist)
-{
-	int		i;
-	int		min;
-	int		min_i;
-
-	// find first V in Q
-	i = -1;
-	while (q[++i])
-		if (q[i] != 0)
-			break ;
-	// store dist(V) in min
-	min = dist[i];
-	// find index of overall min dist(V) in Q
-	i = 0;
-	while (q[++i])
-	{
-		// check only if V is in Q
-		if (q[i] != 0 && dist[i] < min)
-		{
-			min = dist[i];
-			min_i = i;
-		}
-	}
-	return (min_i);
-}
-
-void bfs(t_struct *u, int v)
-{
-	int i;
-	int q[u->num_nodes];
-	int visited[u->num_nodes];
-	int f;
-	int r;
-
-	r = -1;
-	f = 0;
-	i = 1;
-	while (i <= u->num_nodes)
-	{
-		if (u->graph[get_offset_2d(u, v, i)] && !visited[i])
-			q[++r] = i;
-		if (f <= r)
-		{
-			visited[q[f]] = 1;
-			bfs(q[f++], 1);
-		}
-		++i;
-	}
-}
-
-int		dijkstra(t_struct *u)
-{
-	u->dist = (int*)malloc(sizeof(int) * u->num_nodes);
-	u->prev = (int*)malloc(sizeof(int) * u->num_nodes);
-	u->q = (int*)malloc(sizeof(int) * u->num_nodes);
-	u->i = -1;
-	while (++u->i < u->num_nodes)
-	{
-		u->dist[u->i] = INT_MAX;
-		u->prev[u->i] = -1;
-		u->q[u->i] = 1;
-	}
-	u->dist[u->src] = 0;
-	while (!is_q_empty(u->q))
-	{
-		u->v = find_min_dist(u->q, u->dist);
-		u->q[u->v] = 0;
-		if (u->v == u->snk)
-			break ;
-		// find all neighbors (in Q) of V
-	}
-}
 
 void	free_all(t_struct *u)
 {
@@ -118,6 +33,31 @@ int		main(int ac, char **av)
 	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
 		if (!parse(av[1], &u))
 			printf("ERROR\n");
+	bfs(&u);
+
+
+	int current = u.snk;
+	int l_path = 0;
+	while (current != u.src)
+	{
+		current = u.hm->list[current]->prev;
+		++l_path;
+	}
+	int bfs_path[l_path + 1];
+	int i = 0;
+	current = u.snk;
+	while (current != u.src)
+	{
+		bfs_path[l_path - i++] = current;
+		current = u.hm->list[current]->prev;
+	}
+	bfs_path[0] = u.src;
+	i = -1;
+	printf("path:\n");
+	while (++i <= l_path)
+		printf("%d ", bfs_path[i]);
+	printf("\n");
+
 	free_all(&u);
 	//u.graph = (int*)malloc(sizeof(int) * u.nodes * u.nodes * 2);
 }
