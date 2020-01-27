@@ -24,6 +24,7 @@ int	parse(char *av, t_struct *u)
 	i_id = 0;
 	cnt = 0;
 	get_next_line(u->fd, &line);
+	free(line);
 	u->ants = ft_atoi(line);
 	while (get_next_line(u->fd, &line))
 	{
@@ -77,6 +78,7 @@ int	parse(char *av, t_struct *u)
 			u->graph[get_offset_2d(u, id1, id2)] = 1;
 			u->graph[get_offset_2d(u, id2, id1)] = 1;
 		}
+		free(line);
 	}
 	int i = -1;
 	printf("ID: %s\n", u->id);
@@ -99,6 +101,7 @@ int set_dimentions(char *av, t_struct *u)
 	cnt_char = 0;
 	u->num_nodes = 0;
 	get_next_line(u->fd, &line);
+	free(line);
 	while (get_next_line(u->fd, &line))
 	{
 		if (line[0] != '#' && !has_space(line))
@@ -109,7 +112,9 @@ int set_dimentions(char *av, t_struct *u)
 			while (line[++u->i] != ' ')
 				++cnt_char;
 		}
+		free(line);
 	}
+	free(line);
 	u->id = ft_strnew(cnt_char + u->num_nodes);
 	u->graph = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
 	set_zeros(u, u->num_nodes * u->num_nodes);

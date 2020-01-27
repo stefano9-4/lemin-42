@@ -24,52 +24,6 @@
 # include "../includes/libft/get_next_line.h"
 # include <stdio.h>
 
-typedef struct s_cons
-{
-	char 			*name;
-	int 			count;
-	struct s_cons	*next;
-}				t_cons;
-
-typedef struct s_node
-{
-	//index node
-	int cnt;
-	//coordinates
-	int x;
-	int y;
-	//name of the node
-	char *name;
-
-	//maybe
-	//how many connection a node has
-	int nb_connections;
-	//connections to other nodes
-	char **connected_to;
-	//temporary number (to use instead of the name ????)
-	//double tmp_id; //need to figure out how to generate it
-	
-	//next element
-	struct s_node	*next;
-	t_cons	*links;
-
-}				t_node;
-
-// typedef struct  s_lemlist
-// {
-// 	//??????????????????maybe
-// 	int 				info;
-// 	//node that contains parsed infos
-// 	t_node				node;
-// 	///table of value for the node ????
-// 	char				**data;
-// 	//link to the next one
-// 	struct s_lemlist 	*next;
-// 	//link to the previous one ???
-// 	struct s_lemlist	*previous;
-
-// }				t_lemlist;
-
 typedef struct	s_struct
 {
 	int		fd;
@@ -106,11 +60,8 @@ typedef struct	s_struct
 	int		k;
 	int		len;
 	int		v;
-	t_node	*first;
 
 	int 	info;
-	t_node 	*node;
-	//t_lemlist	*lemlist;
 }				t_struct;
 
 int		parse(char *av, t_struct *u);

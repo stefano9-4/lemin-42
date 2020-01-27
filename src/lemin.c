@@ -68,7 +68,7 @@ void bfs(t_struct *u, int v)
 		if (f <= r)
 		{
 			visited[q[f]] = 1;
-			bfs(q[f++]);
+			bfs(q[f++], 1);
 		}
 		++i;
 	}
@@ -97,6 +97,13 @@ int		dijkstra(t_struct *u)
 	}
 }
 
+void	free_all(t_struct *u)
+{
+	free(u->id);
+	free(u->graph);
+	free(u->coor);
+}
+
 int		main(int ac, char **av)
 {
 	t_struct	u;
@@ -111,6 +118,6 @@ int		main(int ac, char **av)
 	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
 		if (!parse(av[1], &u))
 			printf("ERROR\n");
-
+	free_all(&u);
 	//u.graph = (int*)malloc(sizeof(int) * u.nodes * u.nodes * 2);
 }
