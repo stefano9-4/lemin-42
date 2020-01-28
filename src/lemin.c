@@ -14,7 +14,6 @@
 
 void	free_all(t_struct *u)
 {
-	free(u->id);
 	free(u->graph);
 	free(u->coor);
 }

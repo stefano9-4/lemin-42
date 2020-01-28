@@ -20,31 +20,69 @@ void	source_sink(t_struct *u, char *line, int cnt)
 		u->snk = cnt;
 }
 
-int 	parse_node(t_struct *u, char *line, int *cnt)
+int		parse_node(t_struct *u, char *line, int *cnt)
 {
 	char *str;
 
+	u->i = -1;
 	while (line[++u->i] != ' ')
 		;
 	if (!(str = ft_strndup(line, u->i)))
 		return (0);
 	hm_insert(u->hm, *cnt, str);
 	++(*cnt);
+	u->i = -1;
 	return (1);
 }
 
-int	parse(char *av, t_struct *u)
+int		get_keys(t_struct *u, int *key1, int *key2, char *line)
 {
-	char	*line;
-	int		i_id;
-	int		cnt;
-	//	id is the id of node in u->id
+	char *str;
+
+	while (++u->j < u->num_nodes)
+	{
+		str = hm_lookup(u->hm, u->j);
+		if (ft_strncmp(line, str, u->i) == 0)
+			break ;
+		++(*key1);
+	}
+	while (++u->k < u->num_nodes)
+	{
+		str = hm_lookup(u->hm, u->k);
+		if (ft_strncmp(line + u->i + 1, str, u->len) == 0)
+			break ;
+		++(*key2);
+	}
+	return (1);
+}
+
+int		parse_links(t_struct *u, char *line)
+{
 	int		key1;
 	int		key2;
-	//	store name of room;
-	char 	*str;
+	char	*str;
 
-	i_id = 0;
+	u->i = -1;
+	while (line[++u->i] != '-' && line[u->i])
+		;
+	if (!line[u->i] || line[u->i] != '-')
+		return (0);
+	u->j = -1;
+	key1 = 0;
+	u->k = -1;
+	key2 = 0;
+	u->len = ft_strlen(line + u->i + 1);
+	get_keys(u, &key1, &key2, line);
+	u->graph[get_offset_2d(u, key1, key2)] = 1;
+	u->graph[get_offset_2d(u, key2, key1)] = 1;
+	return (1);
+}
+
+int		parse(char *av, t_struct *u)
+{
+	char	*line;
+	int		cnt;
+
 	cnt = 0;
 	if (!(u->hm = createHashMap(u->num_nodes)))
 		return (0);
@@ -57,64 +95,28 @@ int	parse(char *av, t_struct *u)
 	while (get_next_line(u->fd, &line))
 	{
 		u->i = -1;
-		// if ##start or ##end
-		if (!*line)
-		{
-			free(line);
-			return (0);
-		}	
 		if (line[0] == '#' && line[1] == '#')
 			source_sink(u, line, cnt);
-		// Get node name, X, Y
 		else if (line[0] != '#' && has_space(line))
 			parse_node(u, line, &cnt);
-		// get connections
 		else if (line[0] != '#' && cnt == u->num_nodes)
-		{
-			while (line[++u->i] != '-' && line[u->i])
-				;
-			if (!line[u->i] || line[u->i] != '-')
-				return (0);
-			u->j = -1;
-			key1 = 0;
-			while (++u->j < u->num_nodes)
-			{
-				str = hm_lookup(u->hm, u->j);
-				if (ft_strncmp(line, str, u->i) == 0)
-					break;
-				key1++;
-			}
-			u->k = -1;
-			key2 = 0;
-			u->len = ft_strlen(line + u->i + 1);
-			while (++u->k < u->num_nodes)
-			{
-				str = hm_lookup(u->hm, u->k);
-				if (ft_strncmp(line + u->i + 1, str, u->len) == 0)
-					break;
-				++key2;
-			}
-			u->graph[get_offset_2d(u, key1, key2)] = 1;
-			u->graph[get_offset_2d(u, key2, key1)] = 1;
-		}
+			parse_links(u, line);
 		free(line);
 	}
 	print_stuff(u);
-	u->id[i_id - 1] = '\0';
 	return (1);
 }
-
 
 /*
 ** dunno if line is freed correctly
 */
 
-int 	set_stufff(t_struct *u, int cnt_char, char *line)
+int		set_stufff(t_struct *u, char *line)
 {
 	free(line);
 	if (u->num_nodes == 0)
 		return (0);
-	u->id = ft_strnew(cnt_char + u->num_nodes);
+	//u->id = ft_strnew(cnt_char + u->num_nodes);
 	u->graph = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
 	set_zeros(u, u->num_nodes * u->num_nodes);
 	u->coor = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
@@ -125,11 +127,9 @@ int 	set_stufff(t_struct *u, int cnt_char, char *line)
 
 int		set_dimentions(char *av, t_struct *u)
 {
-	size_t	cnt_char;
 	char	*line;
-	int 	ret;
+	int		ret;
 
-	cnt_char = 0;
 	u->num_nodes = 0;
 	ret = get_next_line(u->fd, &line);
 	if (ret <= 0 || *line < 1)
@@ -137,17 +137,18 @@ int		set_dimentions(char *av, t_struct *u)
 	free(line);
 	while (get_next_line(u->fd, &line))
 	{
-		if (line[0] != '#' && !has_space(line))
-			break;
-		else if (line[0] != '#' && ++u->num_nodes)
+		if (!*line)
 		{
-			u->i = -1;
-			while (line[++u->i] != ' ')
-				++cnt_char;
+			free(line);
+			return (0);
 		}
+		if (line[0] != '#' && !has_space(line))
+			break ;
+		else if (line[0] != '#' && ++u->num_nodes)
+			;
 		free(line);
 	}
-	if (!set_stufff(u, cnt_char, line))
+	if (!set_stufff(u, line))
 		return (0);
 	return (1);
 }
