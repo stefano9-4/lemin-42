@@ -23,16 +23,20 @@ int		main(int ac, char **av)
 {
 	t_struct	u;
 
-	//u = (t_struct*)malloc(sizeof(t_struct));
-	//u.nodes = 5;
-
 	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
 		if (!set_dimentions(av[1], &u))
-			printf("ERROR\n");
+		{
+			printf("ERROR 1st read\n");
+			return (0);
+		}	
 	close(u.fd);
 	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
 		if (!parse(av[1], &u))
-			printf("ERROR\n");
+		{
+			printf("ERROR 2nd read\n");
+			return (0);
+		}	
+	printf("pl\n");
 	bfs(&u);
 
 

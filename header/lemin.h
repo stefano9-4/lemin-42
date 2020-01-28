@@ -43,21 +43,9 @@ typedef	struct 	s_table
 typedef struct	s_struct
 {
 	int		fd;
-
-	//index of elem for chained list
-	int 	index;
 	//total nb of ants
 	int		ants;
-	//mark if start/end parsed, if 0, invalid map
-	bool	start;
-	bool	end;
-	//if end or start have only 1 connection, value = 0 else 1
-	bool	multi_sol;
-	//current direction to optimise
-	int 	direction;
 
-	char 	*t_name1;
-	char	*t_name2;
 	int		num_nodes;
 
 	// dim 0: a to b
@@ -65,20 +53,21 @@ typedef struct	s_struct
 	// dim 2: weight
 	int		*graph;
 	char	*id;
-	t_table	*hm;
+
 	int		*coor;
+
+	//start and end 
 	int		src;
 	int		snk;
-	int		*dist;
-	int		*prev;
+	//int		*dist;
+	//int		*prev;
 	int		*q;
 	int		i;
 	int		j;
 	int		k;
 	int		len;
-	int		v;
 
-	int 	info;
+	t_table	*hm;
 }				t_struct;
 
 int		parse(char *av, t_struct *u);

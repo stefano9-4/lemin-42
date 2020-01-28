@@ -20,6 +20,8 @@ t_table	*createHashMap(int size)
 	t = (t_table*)malloc(sizeof(t));
 	t->size = size;
 	t->list = (t_node**)malloc(sizeof(t_node*) * size);
+	if (!t || !t->list)
+		return (NULL);
 	i = -1;
 	while (++i < size)
 		t->list[i] = NULL;
@@ -42,20 +44,24 @@ void	hm_insert(t_table *t, int key, char *name)
 
 	pos = hashCode(t, key);
 	list = t->list[pos];
-	newNode = (t_node*)malloc(sizeof(t_node));
+	if (!(newNode = (t_node*)malloc(sizeof(t_node))))
+		return ;
 	tmp = list;
 	while (tmp)
 	{
 		if (tmp->key == key)
 		{
 			tmp->name = name;
-			return;
+			return ;
 		}
 		tmp = tmp->next;
 	}
 	newNode->key = key;
 	newNode->name = name;
 	newNode->next = list;
+	newNode->has_ant = 0;
+	newNode->prev = 0;
+	newNode->isVisited = 0;
 	t->list[pos] = newNode;
 }
 

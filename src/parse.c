@@ -12,6 +12,27 @@
 
 #include "lemin.h"
 
+void	source_sink(t_struct *u, char *line, int cnt)
+{
+	if (ft_strcmp(line, "##start") == 0)
+		u->src = cnt;
+	else if (ft_strcmp(line, "##end") == 0)
+		u->snk = cnt;
+}
+
+int 	parse_node(t_struct *u, char *line, int *cnt)
+{
+	char *str;
+
+	while (line[++u->i] != ' ')
+		;
+	if (!(str = ft_strndup(line, u->i)))
+		return (0);
+	hm_insert(u->hm, *cnt, str);
+	++(*cnt);
+	return (1);
+}
+
 int	parse(char *av, t_struct *u)
 {
 	char	*line;
@@ -25,34 +46,35 @@ int	parse(char *av, t_struct *u)
 
 	i_id = 0;
 	cnt = 0;
-	u->hm = createHashMap(u->num_nodes);
+	if (!(u->hm = createHashMap(u->num_nodes)))
+		return (0);
 	get_next_line(u->fd, &line);
 	free(line);
+	u->ants = -1;
 	u->ants = ft_atoi(line);
+	if (u->ants <= 0)
+		return (0);
 	while (get_next_line(u->fd, &line))
 	{
 		u->i = -1;
 		// if ##start or ##end
-		if (line[0] == '#' && line[1] == '#')
+		if (!*line)
 		{
-			if (ft_strcmp(line, "##start") == 0)
-				u->src = cnt;
-			else if (ft_strcmp(line, "##end") == 0)
-				u->snk = cnt;
-		}
+			free(line);
+			return (0);
+		}	
+		if (line[0] == '#' && line[1] == '#')
+			source_sink(u, line, cnt);
 		// Get node name, X, Y
 		else if (line[0] != '#' && has_space(line))
-		{
-			while (line[++u->i] != ' ')
-				;
-			str = ft_strndup(line, u->i);
-			hm_insert(u->hm, cnt++, str);
-		}
+			parse_node(u, line, &cnt);
 		// get connections
 		else if (line[0] != '#' && cnt == u->num_nodes)
 		{
-			while (line[++u->i] != '-')
+			while (line[++u->i] != '-' && line[u->i])
 				;
+			if (!line[u->i] || line[u->i] != '-')
+				return (0);
 			u->j = -1;
 			key1 = 0;
 			while (++u->j < u->num_nodes)
@@ -82,14 +104,36 @@ int	parse(char *av, t_struct *u)
 	return (1);
 }
 
+
+/*
+** dunno if line is freed correctly
+*/
+
+int 	set_stufff(t_struct *u, int cnt_char, char *line)
+{
+	free(line);
+	if (u->num_nodes == 0)
+		return (0);
+	u->id = ft_strnew(cnt_char + u->num_nodes);
+	u->graph = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
+	set_zeros(u, u->num_nodes * u->num_nodes);
+	u->coor = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
+	if (!u->id || !u->graph || !u->coor)
+		return (0);
+	return (1);
+}
+
 int		set_dimentions(char *av, t_struct *u)
 {
 	size_t	cnt_char;
 	char	*line;
+	int 	ret;
 
 	cnt_char = 0;
 	u->num_nodes = 0;
-	get_next_line(u->fd, &line);
+	ret = get_next_line(u->fd, &line);
+	if (ret <= 0 || *line < 1)
+		return (0);
 	free(line);
 	while (get_next_line(u->fd, &line))
 	{
@@ -103,12 +147,7 @@ int		set_dimentions(char *av, t_struct *u)
 		}
 		free(line);
 	}
-	free(line);
-	u->id = ft_strnew(cnt_char + u->num_nodes);
-	u->graph = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
-	set_zeros(u, u->num_nodes * u->num_nodes);
-	u->coor = (int*)malloc(sizeof(int) * u->num_nodes * u->num_nodes);
-	if (!u->id || !u->graph || !u->coor)
+	if (!set_stufff(u, cnt_char, line))
 		return (0);
 	return (1);
 }
