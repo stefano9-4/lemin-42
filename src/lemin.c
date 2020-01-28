@@ -35,7 +35,7 @@ int		main(int ac, char **av)
 			printf("ERROR 2nd read\n");
 			return (0);
 		}	
-	printf("pl\n");
+	//printf("pl\n");
 	bfs(&u);
 
 

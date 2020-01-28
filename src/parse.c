@@ -103,7 +103,7 @@ int		parse(char *av, t_struct *u)
 			parse_links(u, line);
 		free(line);
 	}
-	print_stuff(u);
+	//print_stuff(u);
 	return (1);
 }
 
