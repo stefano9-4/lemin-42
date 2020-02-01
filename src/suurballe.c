@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/01 12:18:07 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/01 16:36:37 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/01 16:41:42 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void bellmanFord2(t_struct *u, int *bf_path)
 				is_j_path = is_in_BF_path(u, j, bf_path);
 				if (is_i_path && !is_j_path)
 				{
-					// weight 1 || (0 and same)
+					// weight 1 || ####(0 and same)####   <-------------------
 					w = 1;
 				}
 				else if (!is_i_path && is_j_path)
@@ -108,7 +108,6 @@ int		*inverse_BF_path(t_struct *u)
 		u->graph[get_offset_2d(u, bf_path[l_path - 1], bf_path[l_path])] = 0;
 		--l_path;
 	}
-	// print_stuff(u);
 	return (bf_path);
 }
 
@@ -120,12 +119,13 @@ void	suurballe(t_struct *u)
 	i_suur = -1;
 	printf("max_p: %d\n", u->max_paths);
 	print_graph(u);
+	// create most paths as possible
 	while (++i_suur < u->max_paths)
 	{
 		bf_path = inverse_BF_path(u);
 		bellmanFord2(u, bf_path);
 		print_graph(u);
-
+		// check if other paths can be created
 		if (!is_snk_src_connected(u))
 		{
 			printf("fuck\n");
@@ -141,6 +141,7 @@ void	suurballe(t_struct *u)
 		}
 	}
 
+	// print all paths
 	int i = -1;
 	while (++i < u->curr_path)
 	{
