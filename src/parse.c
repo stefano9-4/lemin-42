@@ -6,7 +6,7 @@
 /*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 09:20:06 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/01/27 16:22:02 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/01/31 16:25:54 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		parse_node(t_struct *u, char *line, int *cnt)
 	return (1);
 }
 
-int		get_keys(t_struct *u, int *key1, int *key2, char *line)
+int		set_keys(t_struct *u, int *key1, int *key2, char *line)
 {
 	char *str;
 
@@ -72,9 +72,11 @@ int		parse_links(t_struct *u, char *line)
 	u->k = -1;
 	key2 = 0;
 	u->len = ft_strlen(line + u->i + 1);
-	get_keys(u, &key1, &key2, line);
+	set_keys(u, &key1, &key2, line);
 	u->graph[get_offset_2d(u, key1, key2)] = 1;
-	u->graph[get_offset_2d(u, key2, key1)] = 1;
+	if (key1 != u->snk - 1 && key2 != u->snk)
+		u->graph[get_offset_2d(u, key2, key1)] = 1;
+	++u->num_edges;
 	return (1);
 }
 
@@ -113,6 +115,7 @@ int		parse(char *av, t_struct *u)
 
 int		set_stufff(t_struct *u, char *line)
 {
+	u->num_edges = 0;
 	free(line);
 	if (u->num_nodes == 0)
 		return (0);

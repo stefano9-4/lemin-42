@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:51:42 by spozzi            #+#    #+#             */
-/*   Updated: 2020/01/27 15:18:55 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/01 16:16:16 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@ typedef struct	s_struct
 	int		ants;
 
 	int		num_nodes;
+	int		num_edges;
+	int		max_paths;
 
+	int		**paths;
+	int		curr_path;
 	// dim 0: a to b
 	// dim 1: b to a
 	// dim 2: weight
@@ -56,7 +60,7 @@ typedef struct	s_struct
 
 	int		*coor;
 
-	//start and end 
+	//start and end
 	int		src;
 	int		snk;
 	//int		*dist;
@@ -82,5 +86,11 @@ t_table	*createHashMap(int size);
 void	print_stuff(t_struct *u);
 int		hashCode(t_table *t, int key);
 void	bfs(t_struct *u);
+void	bellmanFord(t_struct *u);
+void	print_path(t_struct *u, char *str);
+int		*get_BF_path(t_struct *u);
+void	suurballe(t_struct *u);
+void	find_max_paths(t_struct *u);
+int		is_snk_src_connected(t_struct *u);
 
 #endif

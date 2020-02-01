@@ -3,14 +3,107 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lutomasz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/28 15:17:51 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/01/28 15:17:54 by lutomasz         ###   ########.fr       */
+/*   Updated: 2020/02/01 16:36:40 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
+
+int		is_snk_src_connected(t_struct *u)
+{
+	int i;
+	int is_snk_connected;
+	int is_src_connected;
+
+	i = -1;
+	is_src_connected = 0;
+	while (++i < u->num_nodes)
+		if (u->graph[get_offset_2d(u, u->src, i)] == 1)
+		{
+			is_src_connected = 1;
+			break ;
+		}
+	is_snk_connected = 0;
+	i = -1;
+	while (++i < u->num_nodes)
+		if (u->graph[get_offset_2d(u, i, u->snk)] == 1)
+		{
+			is_snk_connected = 1;
+			break ;
+		}
+	return ((is_src_connected == 1 && is_snk_connected == 1) ? 1 : 0);
+}
+
+void	find_max_paths(t_struct *u)
+{
+	int num_src;
+	int num_snk;
+	int i;
+
+	num_src = 0;
+	num_snk = 0;
+	i = -1;
+	while (++i < u->num_nodes)
+	{
+		if (u->graph[get_offset_2d(u, u->src, i)] == 1)
+			++num_src;
+		if (u->graph[get_offset_2d(u, i, u->snk)] == 1)
+			++num_snk;
+	}
+	printf("num_snk: %d\nnum_src %d\n", num_snk, num_src);
+	u->max_paths = (num_src < num_snk) ? num_snk : num_src;
+}
+
+int		*get_BF_path(t_struct *u)
+{
+	int current;
+	int l_path;
+	int i;
+	int *bf_path;
+
+	current = u->snk;
+	l_path = 0;
+	if (u->hm->list[current]->prev == -1)
+		return (0);
+	while (current != u->src && ++l_path)
+	{
+		//printf("curr: %d src: %d\n", current, u->src);
+		current = u->hm->list[current]->prev;
+	}
+	printf("here\n");
+	bf_path = (int *)malloc(sizeof(int) * l_path - 1);
+	current = u->snk;
+	i = 0;
+	while (current != u->src)
+	{
+		bf_path[l_path - i++] = current;
+		current = u->hm->list[current]->prev;
+	}
+	bf_path[0] = u->src;
+	return (bf_path);
+}
+
+void	print_path(t_struct *u, char *str)
+{
+	int i;
+	int *bf_path;
+	int l_path;
+	int current;
+
+	bf_path = get_BF_path(u);
+	l_path = 0;
+	current = u->snk;
+	while (current != u->src && ++l_path)
+		current = u->hm->list[current]->prev;
+	i = -1;
+	printf("%s path:\n", str);
+	while (++i <= l_path)
+		printf("%d(%s) ", bf_path[i], u->hm->list[bf_path[i]]->name);
+	printf("\n");
+}
 
 int		get_offset_3d(t_struct u, int x, int y, int z)
 {
@@ -26,7 +119,7 @@ void	print_graph(t_struct *u)
 {
 	int i = -1;
 	int j;
-	
+
 	printf("ID: %s\n", u->id);
 	while (++i < (u->num_nodes))
 	{
