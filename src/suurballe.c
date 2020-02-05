@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/01 12:18:07 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/01 16:41:42 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/02 15:38:03 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void bellmanFord2(t_struct *u, int *bf_path)
 	int		is_i_path;
 	int		is_j_path;
 	int		w;
+
 
 	i = -1;
 	while (++i < u->num_nodes)
@@ -72,23 +73,20 @@ void bellmanFord2(t_struct *u, int *bf_path)
 				// i && j not in path BF
 				if (weight != 0 || weight == w)
 				{
-					if ((double)dist[i] + (double)weight < dist[j] && ++is_updt)
+					if ((double)dist[i] + (double)weight < (double)dist[j] && ++is_updt)
 					{
-						if (dist[i] == INT_MAX)
-							dist[j] = weight;
-						else
+						// if (dist[i] == INT_MAX)
+						// 	dist[j] = weight;
+						// else
 							dist[j] = dist[i] + weight;
-						printf("curr: %d	prev: %d\n", j, i);
 						u->hm->list[j]->prev = i;
 					}
 				}
 			}
 		}
-		if (i_rel == 0 && is_updt == 0)
-			printf("HERE\n");
 		// If no change is made just stop
 		if (is_updt == 0)
-			break;
+			break ;
 	}
 }
 
@@ -111,36 +109,40 @@ int		*inverse_BF_path(t_struct *u)
 	return (bf_path);
 }
 
+void	remove_src_out(t_struct *u)
+{
+	int i;
+
+	i = -1;
+	while (++i < u->num_nodes)
+	{
+		u->graph[get_offset_2d(u, u->snk, i)] = 0;
+		//u->graph[get_offset_2d(u, i, u->snk)] = 0;
+	}
+}
+
 void	suurballe(t_struct *u)
 {
 	int	*bf_path;
 	int i_suur;
 
 	i_suur = -1;
-	printf("max_p: %d\n", u->max_paths);
-	print_graph(u);
+	//remove_src_out(u);
 	// create most paths as possible
 	while (++i_suur < u->max_paths)
 	{
 		bf_path = inverse_BF_path(u);
 		bellmanFord2(u, bf_path);
-		print_graph(u);
+		//print_graph(u);
 		// check if other paths can be created
 		if (!is_snk_src_connected(u))
-		{
-			printf("fuck\n");
 			break ;
-		}
 		u->paths[u->curr_path++] = get_BF_path(u);
 		int j = -1;
 		while (++j + 1)
-		{
-			printf("%d(%s) ", u->paths[u->curr_path-1][j], u->hm->list[u->paths[u->curr_path-1][j]]->name);
 			if (u->paths[u->curr_path-1][j] == u->snk)
 				break ;
-		}
 	}
-
 	// print all paths
 	int i = -1;
 	while (++i < u->curr_path)

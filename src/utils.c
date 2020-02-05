@@ -6,7 +6,7 @@
 /*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/28 15:17:51 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/02/01 16:36:40 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/02 15:22:09 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	find_max_paths(t_struct *u)
 		if (u->graph[get_offset_2d(u, i, u->snk)] == 1)
 			++num_snk;
 	}
-	printf("num_snk: %d\nnum_src %d\n", num_snk, num_src);
 	u->max_paths = (num_src < num_snk) ? num_snk : num_src;
+	printf("Max_path: %d\n", u->max_paths);
 }
 
 int		*get_BF_path(t_struct *u)
@@ -68,12 +68,13 @@ int		*get_BF_path(t_struct *u)
 	l_path = 0;
 	if (u->hm->list[current]->prev == -1)
 		return (0);
+	// printf("aaaa\n");
 	while (current != u->src && ++l_path)
 	{
-		//printf("curr: %d src: %d\n", current, u->src);
 		current = u->hm->list[current]->prev;
+		// printf("%d (%s)\n", current, u->hm->list[current]->name);
 	}
-	printf("here\n");
+	// printf("qwdd\n");
 	bf_path = (int *)malloc(sizeof(int) * l_path - 1);
 	current = u->snk;
 	i = 0;
