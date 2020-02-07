@@ -6,7 +6,7 @@
 /*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 09:20:06 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/01/31 16:25:54 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/07 11:38:45 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ int		parse_links(t_struct *u, char *line)
 	u->graph[get_offset_2d(u, key1, key2)] = 1;
 	if (key1 != u->snk - 1 && key2 != u->snk)
 		u->graph[get_offset_2d(u, key2, key1)] = 1;
-	++u->num_edges;
+	u->edge_list[u->curr_edg][0] = key1;
+	u->edge_list[u->curr_edg++][1] = key2;
 	return (1);
 }
 
@@ -105,7 +106,6 @@ int		parse(char *av, t_struct *u)
 			parse_links(u, line);
 		free(line);
 	}
-	//print_stuff(u);
 	return (1);
 }
 
@@ -115,7 +115,6 @@ int		parse(char *av, t_struct *u)
 
 int		set_stufff(t_struct *u, char *line)
 {
-	u->num_edges = 0;
 	free(line);
 	if (u->num_nodes == 0)
 		return (0);
@@ -134,10 +133,11 @@ int		set_dimentions(char *av, t_struct *u)
 	int		ret;
 
 	u->num_nodes = 0;
+	u->num_edges = 0;
 	ret = get_next_line(u->fd, &line);
 	if (ret <= 0 || *line < 1)
 		return (0);
-	free(line);
+	//free(line);
 	while (get_next_line(u->fd, &line))
 	{
 		if (!*line)
@@ -146,10 +146,10 @@ int		set_dimentions(char *av, t_struct *u)
 			return (0);
 		}
 		if (line[0] != '#' && !has_space(line))
-			break ;
+			++u->num_edges;
 		else if (line[0] != '#' && ++u->num_nodes)
 			;
-		free(line);
+		// free(line);
 	}
 	if (!set_stufff(u, line))
 		return (0);

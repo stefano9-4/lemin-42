@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:51:42 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/01 16:16:16 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/07 13:00:03 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ typedef struct	s_struct
 	int		max_paths;
 
 	int		**paths;
+	int		**edge_list;
 	int		curr_path;
+	int		curr_edg;
 	// dim 0: a to b
 	// dim 1: b to a
 	// dim 2: weight

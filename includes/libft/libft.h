@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 19:14:38 by spozzi            #+#    #+#             */
-/*   Updated: 2020/01/22 13:40:20 by lutomasz         ###   ########.fr       */
+/*   Updated: 2020/02/07 11:25:12 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ int					**atoi_tab2(char **tab_char, int w, int h);
 void				print_int2(int **tab, int w, int h);
 void				ft_swap(int *a, int *b);
 char				**tab2_cpy(char **src);
-int					**malloc_2d_int_arr(int **arr, int size_i, int size_j);
+int					**malloc_2d_int_arr(int **arr, int size_i, int size_j
+					, int value);
 char				*ft_strndup(const char *s, size_t n);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/28 15:17:51 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/02/02 15:22:09 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/07 13:21:24 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,16 @@ int		*get_BF_path(t_struct *u)
 	int *bf_path;
 
 	current = u->snk;
-	l_path = 0;
 	if (u->hm->list[current]->prev == -1)
 		return (0);
-	// printf("aaaa\n");
+	l_path = 0;
 	while (current != u->src && ++l_path)
-	{
 		current = u->hm->list[current]->prev;
-		// printf("%d (%s)\n", current, u->hm->list[current]->name);
-	}
-	// printf("qwdd\n");
-	bf_path = (int *)malloc(sizeof(int) * l_path - 1);
+	//bf_path = (int *)malloc(sizeof(int) * l_path);
+	bf_path = (int *)malloc(sizeof(int) * 1000);
 	current = u->snk;
 	i = 0;
+	bf_path[l_path + 1] = -1;
 	while (current != u->src)
 	{
 		bf_path[l_path - i++] = current;
@@ -157,7 +154,7 @@ void	print_stuff(t_struct *u)
 	int i;
 	int j;
 	int print_hMap = 1;
-	int print_graph = 1;
+	int print_graph = 0;
 
 	if (print_hMap)
 	{

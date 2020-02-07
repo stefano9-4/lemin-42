@@ -19,6 +19,7 @@ void bellmanFord(t_struct *u)
 	int		i_rel;
 	int		is_updt;
 	int		weight;
+	int		weight2;
 
 	i = -1;
 	while (++i < u->num_nodes)
@@ -30,22 +31,23 @@ void bellmanFord(t_struct *u)
 	{
 		i = -1;
 		is_updt = 0;
-		while (++i < u->num_nodes) // u
+		while (++i < u->num_edges && u->edge_list[i][0] != -1
+				&& u->edge_list[i][1] != -1)
 		{
-			j = -1;
-			while (++j < u->num_nodes) // v
-			{
-				weight = u->graph[get_offset_2d(u, i, j)];
-				if (weight != 0)
-					if ((double)dist[i] + (double)weight < dist[j] && ++is_updt)
-					{
-						if (dist[i] == INT_MAX)
-							dist[j] = weight;
-						else
-							dist[j] = dist[i] + weight;
-						u->hm->list[j]->prev = i;
-					}
-			}
+			weight = u->graph[get_offset_2d(u, u->edge_list[i][0], u->edge_list[i][1])];
+			weight2 = u->graph[get_offset_2d(u, u->edge_list[i][1], u->edge_list[i][0])];
+			if (weight != 0)
+				if ((double)dist[u->edge_list[i][0]] + (double)weight < dist[u->edge_list[i][1]] && ++is_updt)
+				{
+					dist[u->edge_list[i][1]] = dist[u->edge_list[i][0]] + weight;
+					u->hm->list[u->edge_list[i][1]]->prev = u->edge_list[i][0];
+				}
+			if (weight2 != 0)
+				if ((double)dist[u->edge_list[i][1]] + (double)weight2 < (double)dist[u->edge_list[i][0]] && ++is_updt)
+				{
+					dist[u->edge_list[i][0]] = dist[u->edge_list[i][1]] + weight2;
+					u->hm->list[u->edge_list[i][0]]->prev = u->edge_list[i][1];
+				}
 		}
 		// If no change is made just stop
 		if (is_updt == 0)
