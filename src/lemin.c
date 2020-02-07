@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:46:38 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/07 14:04:07 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/07 16:09:23 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int		check_and_merge(t_struct *u, int path1, int path2)
 	int tmp;
 
 	i = -1;
-	while (u->paths[path1][++i + 1] != -1)
+	while (u->paths[path1][++i + 1] && u->paths[path1][i + 1] != -1)
 	{
 		u1 = u->paths[path1][i];
 		v1 = u->paths[path1][i + 1];
 		j = -1;
-		while (u->paths[path2][++j] != -1)
+		while (u->paths[path2][++j] && u->paths[path2][j] != -1)
 		{
 			u2 = u->paths[path2][j];
 			v2 = u->paths[path2][j + 1];
@@ -130,10 +130,24 @@ int		main(int ac, char **av)
 	printf("AAAAAA\n");
 	suurballe(&u);
 	printf("asdasd\n");
-	if (u.curr_path > 1)
-		merge_path(&u);
 	int i = -1;
 	printf("+=======+\n");
+	while (++i < u.curr_path)
+	{
+		printf("path num %d:\n", i);
+		int j = -1;
+		while (++j + 1)
+		{
+			printf("%d(%s) ", u.paths[i][j], u.hm->list[u.paths[i][j]]->name);
+			if (u.paths[i][j] == u.snk)
+				break ;
+		}
+		printf("\n");
+	}
+	printf("+=======+\n");
+	if (u.curr_path > 1)
+		merge_path(&u);
+	i = -1;
 	while (++i < u.curr_path)
 	{
 		printf("path num %d:\n", i);

@@ -6,7 +6,7 @@
 /*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/28 15:17:51 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/02/07 13:21:24 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/07 16:10:34 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,17 @@ int		*get_BF_path(t_struct *u)
 
 	current = u->snk;
 	if (u->hm->list[current]->prev == -1)
+	{
 		return (0);
+	}
 	l_path = 0;
 	while (current != u->src && ++l_path)
+	{
+		// ########################################################
+		if (l_path > 10000)
+			return (0);
 		current = u->hm->list[current]->prev;
+	}
 	//bf_path = (int *)malloc(sizeof(int) * l_path);
 	bf_path = (int *)malloc(sizeof(int) * 1000);
 	current = u->snk;
