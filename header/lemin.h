@@ -29,6 +29,7 @@ typedef	struct	s_node
 	int				key;
 	char			*name;
 	int				has_ant;
+	int				ant_ID;
 	int				prev;
 	int				isVisited;
 	struct s_node	*next;
@@ -49,6 +50,7 @@ typedef struct	s_struct
 	int		num_nodes;
 	int		num_edges;
 	int		max_paths;
+	int		num_paths;
 
 	int		**paths;
 	int		**edge_list;
@@ -94,5 +96,8 @@ int		*get_BF_path(t_struct *u);
 void	suurballe(t_struct *u);
 void	find_max_paths(t_struct *u);
 int		is_snk_src_connected(t_struct *u);
+int		factorial(int n);
+int		combination(int n, int r);
+int		simulate(t_struct *u);
 
 #endif

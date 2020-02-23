@@ -13,7 +13,7 @@
 NAME = lem_in
 
 SRC_NAME = lemin.c parse.c utils.c hashmap.c bfs.c bellmanFord.c \
-			suurballe.c
+			suurballe.c simulate.c
 
 SRC_PATH = src/
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))

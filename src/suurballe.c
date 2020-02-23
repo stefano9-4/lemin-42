@@ -96,7 +96,7 @@ void	bellmanFord2(t_struct *u, int *bf_path)
 					// 	printf("2:(%s,%s) %ldlong\n", u->hm->list[u->edge_list[i][1]]->name, u->hm->list[u->edge_list[i][0]]->name, dist[u->edge_list[i][0]]);
 				}
 		}
-		if (is_updt == 0)
+		if (is_updt == 0 || i_rel > 200)
 			break ;
 		// if (u->curr_path >= 11)
 			// printf("bbbbb\n");
@@ -135,6 +135,7 @@ void	suurballe(t_struct *u)
 	// create most paths as possible
 	while (++i_suur < u->max_paths)
 	{
+		printf("iter: %d\n", i_suur);
 		bf_path = inverse_BF_path(u);
 		int i = -1;
 		while (++i < u->num_nodes)
@@ -144,19 +145,8 @@ void	suurballe(t_struct *u)
 		if (!is_snk_src_connected(u))
 			break ;
 		u->paths[u->curr_path++] = get_BF_path(u);
-		printf("fml\n");
 		if (!u->paths[u->curr_path - 1] && --u->curr_path)
 			break ;
-		// int j = -1;
-		// printf("i_cuur_path: %d\n", u->curr_path - 1);
-		// while (++j + 1)
-		// {
-		// 	printf("%d(%s) ", u->paths[u->curr_path - 1][j], u->hm->list[u->paths[u->curr_path - 1][j]]->name);
-		// 	if (u->paths[u->curr_path - 1][j] == u->snk)
-		// 		break ;
-		// }
-		// printf("\n");
 	}
-	// print all paths
-	// }
+	u->num_paths = i_suur + 1;
 }

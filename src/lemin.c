@@ -147,6 +147,7 @@ int		main(int ac, char **av)
 	printf("+=======+\n");
 	if (u.curr_path > 1)
 		merge_path(&u);
+	simulate(&u);
 	i = -1;
 	while (++i < u.curr_path)
 	{
@@ -163,5 +164,7 @@ int		main(int ac, char **av)
 	end = clock();
 	printf("RT Suurballe:	%f\n", (float)(end - start) / CLOCKS_PER_SEC);
 	free_all(&u);
+
+
 	//u.graph = (int*)malloc(sizeof(int) * u.nodes * u.nodes * 2);
 }

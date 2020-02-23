@@ -12,6 +12,22 @@
 
 #include "lemin.h"
 
+
+int		factorial(int n)
+{
+		int result;
+
+		result = 1;
+		while (n > 0)
+			result *= n--;
+		return (result);
+}
+
+int		combination(int n, int r)
+{
+	return (factorial(n) / (factorial(r) * factorial(n - r)));
+}
+
 int		is_snk_src_connected(t_struct *u)
 {
 	int i;
