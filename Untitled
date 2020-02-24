@@ -1,0 +1,4 @@
+./filler_vm -f maps/map00 -p1 players/superjeannot.filler -p2 players/spozzi.filler | ./visualizer/visualizer && 
+./filler_vm -f maps/map00 -p2 players/superjeannot.filler -p1 players/spozzi.filler | ./visualizer/visualizer && 
+./filler_vm -f maps/map01 -p1 players/superjeannot.filler -p2 players/spozzi.filler | ./visualizer/visualizer && 
+./filler_vm -f maps/map01 -p2 players/superjeannot.filler -p1 players/spozzi.filler | ./visualizer/visualizer
