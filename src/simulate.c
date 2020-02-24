@@ -49,7 +49,7 @@ void	sort_paths(t_struct *u)
 	}
 }
 
-void	print_sol(t_struct *u, int n)
+void	print_sol(t_struct *u, int n, int len[u->num_paths])
 {
 	int	i;
 	int j;
@@ -58,20 +58,17 @@ void	print_sol(t_struct *u, int n)
 	while (++i <= n)
 	{
 		j = 0;
-		while (u->paths[i][j] != u->snk)
+		while (j <= len[i])
 		{
 			j++;
 			if (u->hm->list[u->paths[i][j - 1]]->ant_ID != 0)
-			{
-				printf("(%d/%d): ", i, n);
 				printf("L%d-%s ", u->hm->list[u->paths[i][j - 1]]->ant_ID, u->hm->list[u->paths[i][j - 1]]->name);
-			}
 		}
 	}
 	printf("\n");
 }
 
-void	send_waves(t_struct *u, int i, int len[u->num_paths])
+int		send_waves(t_struct *u, int i, int len[u->num_paths], int print)
 {
 	int		ants_sent;
 	int		path_i;
@@ -82,12 +79,12 @@ void	send_waves(t_struct *u, int i, int len[u->num_paths])
 	ants_arrived = 0;
 	ants_sent = 0;
 	flag = 0;
+	int sol_len = 0;
 	while (ants_arrived < u->ants)
 	{
 		path_i = -1;
 		while (++path_i <= i)
 		{
-			//printf("path_i: %d	i: %d	ants_arrived: %d\n", path_i, i, ants_arrived);
 			if (ants_sent < u->ants && !flag)
 				++ants_sent;
 			else
@@ -105,7 +102,10 @@ void	send_waves(t_struct *u, int i, int len[u->num_paths])
 					break;
 				if (u->paths[path_i][j] == u->snk
 						&& u->hm->list[u->paths[path_i][j - 1]]->has_ant == 1)
+				{
+					u->hm->list[u->paths[path_i][j]]->ant_ID = u->hm->list[u->paths[path_i][j - 1]]->ant_ID;
 					++ants_arrived;
+				}
 				if (u->paths[path_i][j - 1] == u->src && ants_sent != u->ants + 1)
 				{
 					u->hm->list[u->paths[path_i][j]]->ant_ID = ants_sent;
@@ -119,11 +119,11 @@ void	send_waves(t_struct *u, int i, int len[u->num_paths])
 				--j;
 			}
 		}
-		if (ants_arrived != u->ants)
-		{
-			print_sol(u, i);
-		}
+		sol_len++;
+		if (ants_arrived != u->ants && print)
+			print_sol(u, i, len);
 	}
+	return (sol_len - 1);
 }
 
 int		simulate(t_struct *u)
@@ -135,6 +135,7 @@ int		simulate(t_struct *u)
 	int		num_gates_open;
 
 	int		len[u->num_paths];
+	int		sol[u->num_paths];
 	int		sol_found;
 	int		i;
 	int		j;
@@ -150,15 +151,40 @@ int		simulate(t_struct *u)
 		 	u->hm->list[u->paths[i][j]]->ant_ID = 0;
 			u->hm->list[u->paths[i][j]]->has_ant = 0;
 		}
+		u->hm->list[u->snk]->ant_ID = 0;
+		u->hm->list[u->snk]->has_ant = 0;
 		len[i] = j;
 	}
 	i = -1;
+	int tmp;
 	while (++i < u->num_paths)
 	{
-		send_waves(u, i, len);
+		sol[i] = send_waves(u, i, len, 0);
 		printf("------------\n");
-
+		tmp = -1;
+		while (++tmp < u->num_paths)
+		{
+			j = -1;
+			while (++j <= len[tmp])
+			{
+			 	u->hm->list[u->paths[tmp][j]]->ant_ID = 0;
+				u->hm->list[u->paths[tmp][j]]->has_ant = 0;
+			}
+		}
 	}
+	int min = INT_MAX;
+	int min_i;
+	i = -1;
+	while (++i < u->num_paths)
+	{
+		if (sol[i] < min)
+		{
+			min = sol[i];
+			min_i = i;
+		}
+	}
+	printf("sol: %d (%d)\n", min_i, sol[min_i]);
+	send_waves(u, min_i, len, 1);
 	// u->max_paths = u->ants;
 	// max_iter = set_max_iter(u->num_paths);
 	// num_gates_open = u->num_paths;
