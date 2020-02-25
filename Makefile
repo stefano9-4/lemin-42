@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+         #
+#    By: lutomasz <lutomasz@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/01 18:00:07 by lutomasz          #+#    #+#              #
-#    Updated: 2020/02/01 12:19:38 by spozzi           ###   ########.fr        #
+#    Updated: 2020/02/25 11:59:26 by spozzi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = lem_in
 
-SRC_NAME = lemin.c parse.c utils.c hashmap.c bfs.c bellmanFord.c \
-			suurballe.c simulate.c
+SRC_NAME = lemin.c parse.c utils.c hashmap.c bfs.c bellman_ford.c \
+			suurballe.c simulate.c simu_utils.c
 
 SRC_PATH = src/
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))

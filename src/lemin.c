@@ -121,7 +121,7 @@ int		main(int ac, char **av)
 	end = clock();
 	printf("RT BFS:	%f\n", (float)(end - start) / CLOCKS_PER_SEC);
 	start = clock();
-	bellmanFord(&u);
+	bellman_ford(&u);
 	end = clock();
 	printf("RT BF:	%f\n", (float)(end - start) / CLOCKS_PER_SEC);
 	u.curr_path = 0;

@@ -23,7 +23,7 @@ int		is_in_BF_path(t_struct *u, int v, int *bf_path)
 	return (0);
 }
 
-void	bellmanFord2(t_struct *u, int *bf_path)
+void	bellman_ford2(t_struct *u, int *bf_path)
 {
 	long	dist[u->num_nodes];
 	int		i;
@@ -140,7 +140,7 @@ void	suurballe(t_struct *u)
 		int i = -1;
 		while (++i < u->num_nodes)
 			u->hm->list[i]->prev = -1;
-		bellmanFord2(u, bf_path);
+		bellman_ford2(u, bf_path);
 		// check if other paths can be created
 		if (!is_snk_src_connected(u))
 			break ;

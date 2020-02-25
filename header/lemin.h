@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lemin.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:51:42 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/07 13:00:03 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/25 12:01:44 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,20 @@ typedef struct	s_struct
 	int		k;
 	int		len;
 
+	int		ants_sent;
+	int		path_i;
+	int		ants_arrived;
+	int		flag;
+	int		sol_len;
+
+	int min;
+	int min_i;
+
+	int		i_rel;
+	int		is_updt;
+	int		weight;
+	int		weight2;
+
 	t_table	*hm;
 }				t_struct;
 
@@ -90,7 +104,7 @@ t_table	*createHashMap(int size);
 void	print_stuff(t_struct *u);
 int		hashCode(t_table *t, int key);
 void	bfs(t_struct *u);
-void	bellmanFord(t_struct *u);
+void	bellman_ford(t_struct *u);
 void	print_path(t_struct *u, char *str);
 int		*get_BF_path(t_struct *u);
 void	suurballe(t_struct *u);
@@ -99,5 +113,8 @@ int		is_snk_src_connected(t_struct *u);
 int		factorial(int n);
 int		combination(int n, int r);
 int		simulate(t_struct *u);
+void	sort_paths(t_struct *u);
+void	print_sol(t_struct *u, int n, int len[u->num_paths]);
+void 	len_path(t_struct *u);
 
 #endif
