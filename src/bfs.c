@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bfs.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 15:00:33 by spozzi            #+#    #+#             */
-/*   Updated: 2020/01/27 16:09:02 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/25 13:34:34 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,49 +23,31 @@ int		is_q_empty(t_struct *u, int q[u->num_nodes])
 	return (1);
 }
 
-int		deQ(t_struct *u, int q[u->num_nodes])
-{
-	int i;
-
-	i = -1;
-	while (++i < u->num_nodes)
-		if (q[i] != -1)
-			return (i);
-	return (-1);
-}
-
 void	bfs(t_struct *u)
 {
 	int		q[u->num_nodes];
-	//int		pred[u->num_nodes];
 	int		i;
-	int		i_enq;
-	int		i_deq;
-	int 	current;
 
-	i_enq = 0;
-	i_deq = 0;
+	u->i_enq = 0;
+	u->i_deq = 0;
 	i = -1;
 	while (++i < u->num_nodes)
 		q[i] = -1;
-	q[i_enq++] = u->src;
+	q[u->i_enq++] = u->src;
 	u->hm->list[u->src]->isVisited = 1;
 	while (!is_q_empty(u, q))
 	{
-		current = q[i_deq];
-		q[i_deq++] = -1;
+		u->current = q[u->i_deq];
+		q[u->i_deq++] = -1;
 		i = -1;
 		while (++i < u->num_nodes)
-		{
-			if (u->graph[get_offset_2d(u, current, i)] == 1)
-			{
+			if (u->graph[get_offset_2d(u, u->current, i)] == 1)
 				if (!u->hm->list[i]->isVisited)
 				{
 					u->hm->list[i]->isVisited = 1;
-					u->hm->list[i]->prev = current;
-					q[i_enq++] = i;
+					u->hm->list[i]->prev = u->current;
+					q[u->i_enq++] = i;
 				}
-			}
-		}
 	}
+	printf("snk prev %d\n", u->hm->list[u->snk]->prev);
 }

@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lutomasz <lutomasz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lutomasz <lutomasz@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/28 15:17:51 by lutomasz          #+#    #+#             */
-/*   Updated: 2020/02/07 16:10:34 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/25 12:50:05 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
-
-
-int		factorial(int n)
-{
-		int result;
-
-		result = 1;
-		while (n > 0)
-			result *= n--;
-		return (result);
-}
-
-int		combination(int n, int r)
-{
-	return (factorial(n) / (factorial(r) * factorial(n - r)));
-}
 
 int		is_snk_src_connected(t_struct *u)
 {
@@ -73,34 +57,29 @@ void	find_max_paths(t_struct *u)
 	printf("Max_path: %d\n", u->max_paths);
 }
 
-int		*get_BF_path(t_struct *u)
+int		*get_bf_path(t_struct *u)
 {
 	int current;
 	int l_path;
-	int i;
 	int *bf_path;
 
 	current = u->snk;
 	if (u->hm->list[current]->prev == -1)
-	{
 		return (0);
-	}
 	l_path = 0;
 	while (current != u->src && ++l_path)
 	{
-		// ########################################################
 		if (l_path > 10000)
 			return (0);
 		current = u->hm->list[current]->prev;
 	}
-	//bf_path = (int *)malloc(sizeof(int) * l_path);
 	bf_path = (int *)malloc(sizeof(int) * 1000);
 	current = u->snk;
-	i = 0;
+	u->i = 0;
 	bf_path[l_path + 1] = -1;
 	while (current != u->src)
 	{
-		bf_path[l_path - i++] = current;
+		bf_path[l_path - u->i++] = current;
 		current = u->hm->list[current]->prev;
 	}
 	bf_path[0] = u->src;
@@ -114,7 +93,7 @@ void	print_path(t_struct *u, char *str)
 	int l_path;
 	int current;
 
-	bf_path = get_BF_path(u);
+	bf_path = get_bf_path(u);
 	l_path = 0;
 	current = u->snk;
 	while (current != u->src && ++l_path)
@@ -126,90 +105,7 @@ void	print_path(t_struct *u, char *str)
 	printf("\n");
 }
 
-int		get_offset_3d(t_struct u, int x, int y, int z)
-{
-	return (z * u.num_nodes * u.num_nodes) + (y * u.num_nodes) + x;
-}
-
 int		get_offset_2d(t_struct *u, int x, int y)
 {
 	return (y * u->num_nodes) + x;
-}
-
-void	print_graph(t_struct *u)
-{
-	int i = -1;
-	int j;
-
-	printf("ID: %s\n", u->id);
-	while (++i < (u->num_nodes))
-	{
-		j = -1;
-		while (++j < u->num_nodes)
-			printf("%d ", u->graph[get_offset_2d(u, i, j)]);
-		printf("\n");
-	}
-}
-
-void	set_zeros(t_struct *u, int size)
-{
-	int i;
-
-	i = -1;
-	while (++i < size)
-		u->graph[i] = 0;
-}
-
-int		has_space(char *str)
-{
-	int i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] == ' ')
-			return (1);
-	return (0);
-}
-
-void	print_stuff(t_struct *u)
-{
-	int aa;
-	int i;
-	int j;
-	int print_hMap = 1;
-	int print_graph = 0;
-
-	if (print_hMap)
-	{
-		aa = -1;
-		printf("HashMap values:\n");
-		while (++aa < u->num_nodes)
-		{
-			int pos = hashCode(u->hm, aa);
-			printf("key:		%d\n", u->hm->list[pos]->key);
-			printf("name:		%s\n", u->hm->list[pos]->name);
-			printf("prev:		%d\n", u->hm->list[pos]->prev);
-			printf("has_ant:	%d\n", u->hm->list[pos]->has_ant);
-			printf("isVisited:	%d", u->hm->list[pos]->isVisited);
-			if (aa != u->num_nodes - 1)
-				printf("\n\n");
-			// printf("%s ", hm_lookup(u->hm, aa));
-		}
-		printf("\n\n-------------------\n\n");
-	}
-	if (print_graph)
-	{
-		i = -1;
-		printf("Graph:\n");
-		while (++i < (u->num_nodes))
-		{
-			j = -1;
-			while (++j < u->num_nodes)
-				printf("%d ", u->graph[get_offset_2d(u, i, j)]);
-			printf("\n");
-		}
-		printf("Source (k, n):	(%d, %s)\n", u->src, u->hm->list[hashCode(u->hm, u->src)]->name);
-		printf("Sink   (k, n):	(%d, %s)\n", u->snk, u->hm->list[hashCode(u->hm, u->snk)]->name);
-		printf("\n-------------------\n");
-	}
 }

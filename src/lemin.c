@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lemin.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:46:38 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/07 16:09:23 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/25 13:43:08 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,51 +19,46 @@ void	free_all(t_struct *u)
 	free(u->coor);
 }
 
+void	check_and_merge_bis(t_struct *u, int path1, int path2)
+{
+	u->i_tmp = u->i + 2;
+	u->j_tmp = u->j + 2;
+	while (u->paths[path1][u->i_tmp] != -1 || u->paths[path2][u->j_tmp] != -1)
+	{
+		if (u->paths[path2][u->j_tmp] != -1)
+		{
+			if (u->paths[path1][u->i - 1] != u->paths[path2][u->j_tmp])
+				u->paths[path1][u->i++] = u->paths[path2][u->j_tmp++];
+			else
+				u->j_tmp++;
+		}
+		if (u->paths[path1][u->i_tmp] != -1)
+		{
+			if (u->paths[path1][u->i_tmp] != u->paths[path2][u->j - 1])
+				u->paths[path2][u->j++] = u->paths[path1][u->i_tmp++];
+			else
+				u->i_tmp++;
+		}
+	}
+}
+
 int		check_and_merge(t_struct *u, int path1, int path2)
 {
-	int i;
-	int j;
-	int u1;
-	int v1;
-	int u2;
-	int v2;
-	int i_tmp;
-	int j_tmp;
-	int tmp;
-
-	i = -1;
-	while (u->paths[path1][++i + 1] && u->paths[path1][i + 1] != -1)
+	u->i = -1;
+	while (u->paths[path1][++u->i + 1] && u->paths[path1][u->i + 1] != -1)
 	{
-		u1 = u->paths[path1][i];
-		v1 = u->paths[path1][i + 1];
-		j = -1;
-		while (u->paths[path2][++j] && u->paths[path2][j] != -1)
+		u->u1 = u->paths[path1][u->i];
+		u->v1 = u->paths[path1][u->i + 1];
+		u->j = -1;
+		while (u->paths[path2][++u->j] && u->paths[path2][u->j] != -1)
 		{
-			u2 = u->paths[path2][j];
-			v2 = u->paths[path2][j + 1];
-			if (u1 == v2 && v1 == u2)
+			u->u2 = u->paths[path2][u->j];
+			u->v2 = u->paths[path2][u->j + 1];
+			if (u->u1 == u->v2 && u->v1 == u->u2)
 			{
-				i_tmp = i + 2;
-				j_tmp = j + 2;
-				while (u->paths[path1][i_tmp] != -1 || u->paths[path2][j_tmp] != -1)
-				{
-					if (u->paths[path2][j_tmp] != -1)
-					{
-						if (u->paths[path1][i - 1] != u->paths[path2][j_tmp])
-							u->paths[path1][i++] = u->paths[path2][j_tmp++];
-						else
-							j_tmp++;
-					}
-					if (u->paths[path1][i_tmp] != -1)
-					{
-						if (u->paths[path1][i_tmp] != u->paths[path2][j - 1])
-							u->paths[path2][j++] = u->paths[path1][i_tmp++];
-						else
-							i_tmp++;
-					}
-				}
-				u->paths[path1][i_tmp] = -1;
-				u->paths[path2][j_tmp] = -1;
+				check_and_merge_bis(u, path1, path2);
+				u->paths[path1][u->i_tmp] = -1;
+				u->paths[path2][u->j_tmp] = -1;
 				return (1);
 			}
 		}
@@ -74,9 +69,6 @@ int		check_and_merge(t_struct *u, int path1, int path2)
 void	merge_path(t_struct *u)
 {
 	int i;
-	int j;
-	int i_tmp;
-	int j_tmp;
 	int path1;
 	int path2;
 
@@ -104,44 +96,28 @@ int		main(int ac, char **av)
 			return (0);
 		}
 	close(u.fd);
-	u.edge_list = malloc_2d_int_arr(u.edge_list, u.num_edges, 2, -1);
+	u.edge_lst = malloc_2d_int_arr(u.edge_lst, u.num_edges, 2, -1);
 	u.curr_edg = 0;
 	if (ac == 2 && ((u.fd = open(av[1], O_RDONLY)) != 0))
-		if (!parse(av[1], &u))
-		{
-			printf("ERROR 2nd read\n");
-			return (0);
-		}
-	// bfs(&u);
-	// print_path(&u, "BFS");
+		if (!parse(av[1], &u) && printf("ERROR 2nd read\n"))
+			return (1);
 	find_max_paths(&u);
 	u.paths = (int**)malloc(sizeof(int*) * u.max_paths);
-	start = clock();
-	//bfs(&u);
-	end = clock();
-	printf("RT BFS:	%f\n", (float)(end - start) / CLOCKS_PER_SEC);
-	start = clock();
-	bellman_ford(&u);
-	end = clock();
-	printf("RT BF:	%f\n", (float)(end - start) / CLOCKS_PER_SEC);
+	// bfs(&u);
+	if (!bellman_ford(&u) && printf("Source and Sink not conencted :(\n"))
+		return (1);
 	u.curr_path = 0;
-	u.paths[u.curr_path++] = get_BF_path(&u);
-	start = clock();
-	printf("AAAAAA\n");
+	u.paths[u.curr_path++] = get_bf_path(&u);
 	suurballe(&u);
-	printf("asdasd\n");
 	int i = -1;
 	printf("+=======+\n");
 	while (++i < u.curr_path)
 	{
 		printf("path num %d:\n", i);
 		int j = -1;
-		while (++j + 1)
-		{
-			printf("%d(%s) ", u.paths[i][j], u.hm->list[u.paths[i][j]]->name);
+		while (++j + 1 && printf("%d(%s) ", u.paths[i][j], u.hm->list[u.paths[i][j]]->name))
 			if (u.paths[i][j] == u.snk)
 				break ;
-		}
 		printf("\n");
 	}
 	printf("+=======+\n");
@@ -153,18 +129,13 @@ int		main(int ac, char **av)
 	{
 		printf("path num %d:\n", i);
 		int j = -1;
-		while (++j + 1)
-		{
-			printf("%d(%s) ", u.paths[i][j], u.hm->list[u.paths[i][j]]->name);
+		while (++j + 1 && printf("%d(%s) ", u.paths[i][j], u.hm->list[u.paths[i][j]]->name))
 			if (u.paths[i][j] == u.snk)
 				break ;
-		}
 		printf("\n");
 	}
-	end = clock();
-	printf("RT Suurballe:	%f\n", (float)(end - start) / CLOCKS_PER_SEC);
 	free_all(&u);
-
+	return (1);
 
 	//u.graph = (int*)malloc(sizeof(int) * u.nodes * u.nodes * 2);
 }

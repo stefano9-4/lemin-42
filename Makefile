@@ -6,14 +6,14 @@
 #    By: lutomasz <lutomasz@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/01 18:00:07 by lutomasz          #+#    #+#              #
-#    Updated: 2020/02/25 11:59:26 by spozzi           ###   ########.fr        #
+#    Updated: 2020/02/25 12:52:35 by spozzi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = lem_in
 
 SRC_NAME = lemin.c parse.c utils.c hashmap.c bfs.c bellman_ford.c \
-			suurballe.c simulate.c simu_utils.c
+			suurballe.c simulate.c simu_utils.c utils2.c parse2.c
 
 SRC_PATH = src/
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))

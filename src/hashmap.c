@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   hashmap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 13:04:48 by spozzi            #+#    #+#             */
-/*   Updated: 2020/01/27 13:48:19 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/25 15:31:50 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-t_table	*createHashMap(int size)
+t_table	*create_hash_map(int size)
 {
 	t_table	*t;
 	int		i;
@@ -28,10 +28,10 @@ t_table	*createHashMap(int size)
 	return (t);
 }
 
-int		hashCode(t_table *t, int key)
+int		hash_code(t_table *t, int key)
 {
 	if (key < 0)
-		return - (key % t->size);
+		return (-(key % t->size));
 	return (key % t->size);
 }
 
@@ -39,12 +39,12 @@ void	hm_insert(t_table *t, int key, char *name)
 {
 	int		pos;
 	t_node	*list;
-	t_node	*newNode;
+	t_node	*new_node;
 	t_node	*tmp;
 
-	pos = hashCode(t, key);
+	pos = hash_code(t, key);
 	list = t->list[pos];
-	if (!(newNode = (t_node*)malloc(sizeof(t_node))))
+	if (!(new_node = (t_node*)malloc(sizeof(t_node))))
 		return ;
 	tmp = list;
 	while (tmp)
@@ -56,13 +56,13 @@ void	hm_insert(t_table *t, int key, char *name)
 		}
 		tmp = tmp->next;
 	}
-	newNode->key = key;
-	newNode->name = name;
-	newNode->next = list;
-	newNode->has_ant = 0;
-	newNode->prev = 0;
-	newNode->isVisited = 0;
-	t->list[pos] = newNode;
+	new_node->key = key;
+	new_node->name = name;
+	new_node->next = list;
+	new_node->prev = -1;
+	new_node->isVisited = 0;
+	// new_node->ant_ID = (int*)malloc(sizeof(int) * u->ants);
+	t->list[pos] = new_node;
 }
 
 char	*hm_lookup(t_table *t, int key)
@@ -71,7 +71,7 @@ char	*hm_lookup(t_table *t, int key)
 	t_node	*tmp;
 	int		pos;
 
-	pos = hashCode(t, key);
+	pos = hash_code(t, key);
 	list = t->list[pos];
 	tmp = list;
 	while (tmp)

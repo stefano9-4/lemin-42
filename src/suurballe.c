@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   suurballe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spozzi <spozzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/01 12:18:07 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/07 16:12:31 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/25 13:39:35 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-int		is_in_BF_path(t_struct *u, int v, int *bf_path)
+int		is_in_bf_path(t_struct *u, int v, int *bf_path)
 {
 	int		i;
 
@@ -23,96 +23,67 @@ int		is_in_BF_path(t_struct *u, int v, int *bf_path)
 	return (0);
 }
 
+void	bellman_ford2_bis(t_struct *u, int *bf_path, long dist[u->num_nodes])
+{
+	u->is_i_path = is_in_bf_path(u, u->edge_lst[u->i][0], bf_path);
+	u->is_j_path = is_in_bf_path(u, u->edge_lst[u->i][1], bf_path);
+	if (u->is_i_path && !u->is_j_path)
+		u->w = 1;
+	else if (!u->is_i_path && u->is_j_path)
+		u->w = 1;
+	else if (u->is_i_path && u->is_j_path)
+		u->w = -1;
+	if (u->w8_l != 0 || u->w8_l == u->w)
+		if (dist[u->edge_lst[u->i][0]] + u->w8_l < dist[u->edge_lst[u->i][1]]
+			&& ++u->is_updt)
+		{
+			dist[u->edge_lst[u->i][1]] = dist[u->edge_lst[u->i][0]] + u->w8_l;
+			u->hm->list[u->edge_lst[u->i][1]]->prev = u->edge_lst[u->i][0];
+		}
+	if (u->w82_l != 0 || u->w82_l == u->w)
+		if (dist[u->edge_lst[u->i][1]] + u->w82_l < dist[u->edge_lst[u->i][0]]
+			&& ++u->is_updt)
+		{
+			dist[u->edge_lst[u->i][0]] = dist[u->edge_lst[u->i][1]]
+				+ u->w82_l;
+			u->hm->list[u->edge_lst[u->i][0]]->prev = u->edge_lst[u->i][1];
+		}
+}
+
 void	bellman_ford2(t_struct *u, int *bf_path)
 {
 	long	dist[u->num_nodes];
-	int		i;
-	int		j;
-	int		i_rel;
-	int		is_updt;
-	long	weight;
-	long	weight2;
-	int		is_i_path;
-	int		is_j_path;
-	int		w;
 
-	i = -1;
-	while (++i < u->num_nodes)
-		dist[i] = INT_MAX;
+	u->i = -1;
+	while (++u->i < u->num_nodes)
+		dist[u->i] = INT_MAX;
 	dist[u->src] = 0;
-	i_rel = -1;
-	// Relax edges |V - 1| times
-	// printf("+++++++++++++++++++++++++++++++++++++++\n");
-	while (++i_rel < u->num_nodes - 1)
+	u->i_rel = -1;
+	while (++u->i_rel < u->num_nodes - 1)
 	{
-		i = -1;
-		is_updt = 0;
-		// if (u->curr_path >= 11)
-			// printf("aaaaaa %d\n", i_rel);
-		while (++i < u->num_edges && u->edge_list[i][0] != -1
-				&& u->edge_list[i][1] != -1)
+		u->i = -1;
+		u->is_updt = 0;
+		while (++u->i < u->num_edges && u->edge_lst[u->i][0] != -1
+				&& u->edge_lst[u->i][1] != -1)
 		{
-			w = 2;
-			weight = u->graph[get_offset_2d(u, u->edge_list[i][0], u->edge_list[i][1])];
-			weight2 = u->graph[get_offset_2d(u, u->edge_list[i][1], u->edge_list[i][0])];
-			is_i_path = is_in_BF_path(u, u->edge_list[i][0], bf_path);
-			is_j_path = is_in_BF_path(u, u->edge_list[i][1], bf_path);
-			if (is_i_path && !is_j_path)
-			{
-				// weight 1 || ####(0 and same)####   <-------------------
-				w = 1;
-			}
-			else if (!is_i_path && is_j_path)
-			{
-				// weight 1
-				w = 1;
-			}
-			else if (is_i_path && is_j_path)
-			{
-				// weight -1
-				w = -1;
-			}
-			// i && j not in path BF
-			if (weight != 0 || weight == w)
-				if (dist[u->edge_list[i][0]] + weight < dist[u->edge_list[i][1]] && ++is_updt)
-				{
-					// if (dist[u->edge_list[i][0]] + weight > INT_MAX)
-					// 	dist[u->edge_list[i][1]] = weight;
-					// else
-						dist[u->edge_list[i][1]] = dist[u->edge_list[i][0]] + weight;
-					u->hm->list[u->edge_list[i][1]]->prev = u->edge_list[i][0];
-					// if (u->curr_path == 11)
-					// 	printf("1:(%s,%s): %ldlong\n", u->hm->list[u->edge_list[i][0]]->name,u->hm->list[u->edge_list[i][1]]->name, dist[u->edge_list[i][1]]);
-				}
-			if (weight2 != 0 || weight2 == w)
-				if (dist[u->edge_list[i][1]] + weight2 < dist[u->edge_list[i][0]] && ++is_updt)
-				{
-					// if (dist[u->edge_list[i][1]] + weight2 > INT_MAX)
-					// 	dist[u->edge_list[i][0]] = weight2;
-					// else
-						dist[u->edge_list[i][0]] = dist[u->edge_list[i][1]] + weight2;
-					u->hm->list[u->edge_list[i][0]]->prev = u->edge_list[i][1];
-					// if (u->curr_path == 11)
-					// 	printf("2:(%s,%s) %ldlong\n", u->hm->list[u->edge_list[i][1]]->name, u->hm->list[u->edge_list[i][0]]->name, dist[u->edge_list[i][0]]);
-				}
+			u->w = 2;
+			u->w8_l = u->graph[get_offset_2d(u, u->edge_lst[u->i][0],
+				u->edge_lst[u->i][1])];
+			u->w82_l = u->graph[get_offset_2d(u, u->edge_lst[u->i][1],
+				u->edge_lst[u->i][0])];
+			bellman_ford2_bis(u, bf_path, dist);
 		}
-		if (is_updt == 0 || i_rel > 200)
+		if (u->is_updt == 0 || u->i_rel > 200)
 			break ;
-		// if (u->curr_path >= 11)
-			// printf("bbbbb\n");
-		// If no change is made just stop
 	}
-	// if (u->curr_path >= 11)
-		// printf("ccccccc\n");
 }
 
-int		*inverse_BF_path(t_struct *u)
+int		*inverse_bf_path(t_struct *u)
 {
 	int	i;
 	int	l_path;
 	int	*bf_path;
 
-	// printf("curr: %d\n", u->curr_path -1);
 	bf_path = u->paths[u->curr_path - 1];
 	l_path = 0;
 	while (bf_path[l_path] != u->snk)
@@ -130,23 +101,23 @@ void	suurballe(t_struct *u)
 {
 	int	*bf_path;
 	int i_suur;
+	int i;
 
 	i_suur = -1;
-	// create most paths as possible
 	while (++i_suur < u->max_paths)
 	{
 		printf("iter: %d\n", i_suur);
-		bf_path = inverse_BF_path(u);
-		int i = -1;
+		bf_path = inverse_bf_path(u);
+		i = -1;
 		while (++i < u->num_nodes)
 			u->hm->list[i]->prev = -1;
 		bellman_ford2(u, bf_path);
-		// check if other paths can be created
-		if (!is_snk_src_connected(u))
-			break ;
-		u->paths[u->curr_path++] = get_BF_path(u);
+		// if (!is_snk_src_connected(u))
+		// 	return (0);
+		u->paths[u->curr_path++] = get_bf_path(u);
 		if (!u->paths[u->curr_path - 1] && --u->curr_path)
 			break ;
 	}
 	u->num_paths = i_suur + 1;
+	// return (1);
 }
