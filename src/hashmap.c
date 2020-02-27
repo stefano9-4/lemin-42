@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/27 13:04:48 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/25 15:31:50 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/27 13:16:34 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	hm_insert(t_table *t, int key, char *name)
 	new_node->next = list;
 	new_node->prev = -1;
 	new_node->isVisited = 0;
-	// new_node->ant_ID = (int*)malloc(sizeof(int) * u->ants);
+	new_node->ant_ID = -1;
 	t->list[pos] = new_node;
 }
 

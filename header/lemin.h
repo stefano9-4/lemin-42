@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:51:42 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/25 15:31:21 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/27 12:22:31 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int		factorial(int n);
 int		combination(int n, int r);
 int		simulate(t_struct *u);
 void	sort_paths(t_struct *u);
-void	print_sol(t_struct *u, int n, int len[u->num_paths]);
+void	print_sol(t_struct *u, int n, int len[u->num_paths], int ant_pos[u->i]);
 //void	print_sol(t_struct *u, int n, int len[u->num_paths], int to_print[u->ants]);
 void 	len_path(t_struct *u);
 void	source_sink(t_struct *u, char *line, int cnt);

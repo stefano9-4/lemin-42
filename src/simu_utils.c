@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 11:49:49 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/25 14:59:28 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/27 13:03:23 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	sort_paths(t_struct *u)
 	}
 }
 
-void	print_sol(t_struct *u, int n, int len[u->num_paths])
+void	print_sol(t_struct *u, int n, int len[u->num_paths], int ant_pos[u->i])
 {
 	int	i;
 	int j;
@@ -49,20 +49,28 @@ void	print_sol(t_struct *u, int n, int len[u->num_paths])
 	i = -1;
 	while (++i < u->ants)
 		id[i] = 0;
-	i = -1;
-	while (++i <= n)
-	{
+	// i = -1;
+	// while (++i <= n)
+	// {
 		j = -1;
-		while (++j <= len[i])
-			if (u->hm->list[u->paths[i][j]]->ant_ID != 0)
+		while (++j < u->ants)
+			if (ant_pos[j] >= 0)
 			{
-				if (id[u->hm->list[u->paths[i][j]]->ant_ID] != 1)
-					printf("L%d-%s ", u->hm->list[u->paths[i][j]]->ant_ID,
-						u->hm->list[u->paths[i][j]]->name);
-				if (j == len[i])
-					id[u->hm->list[u->paths[i][j]]->ant_ID] = 1;
+				printf("L%d-%s ", j + 1, u->hm->list[ant_pos[j]]->name);
+				if (ant_pos[j] == u->snk)
+					ant_pos[j] = -1;
 			}
-	}
+
+	// 	while (++j <= len[i])
+	// 		if (u->hm->list[u->paths[i][j]]->ant_ID != 0)
+	// 		{
+	// 			if (id[u->hm->list[u->paths[i][j]]->ant_ID] != 1)
+	// 				printf("L%d-%s ", u->hm->list[u->paths[i][j]]->ant_ID,
+	// 					u->hm->list[u->paths[i][j]]->name);
+	// 			if (j == len[i])
+	// 				id[u->hm->list[u->paths[i][j]]->ant_ID] = 1;
+	// 		}
+	// }
 	printf("\n");
 }
 

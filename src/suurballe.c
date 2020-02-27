@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/01 12:18:07 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/25 13:39:35 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/27 14:30:53 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	bellman_ford2(t_struct *u, int *bf_path)
 				u->edge_lst[u->i][0])];
 			bellman_ford2_bis(u, bf_path, dist);
 		}
-		if (u->is_updt == 0 || u->i_rel > 200)
+		if (u->is_updt == 0 || u->i_rel > 300)
 			break ;
 	}
 }

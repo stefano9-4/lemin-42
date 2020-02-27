@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:46:38 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/25 13:43:08 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/27 13:27:58 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,9 @@ int		main(int ac, char **av)
 				break ;
 		printf("\n");
 	}
-	printf("+=======+\n");
 	if (u.curr_path > 1)
 		merge_path(&u);
+	printf("+=======+\n");
 	simulate(&u);
 	i = -1;
 	while (++i < u.curr_path)
