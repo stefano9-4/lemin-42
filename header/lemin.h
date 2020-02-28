@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:51:42 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/27 12:22:31 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/28 14:13:53 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef	struct	s_node
 	int				key;
 	char			*name;
 	int				has_ant;
+	int				n_ants;
 	int				ant_ID;
 	int				prev;
 	int				isVisited;
@@ -99,6 +100,8 @@ typedef struct	s_struct
 	int 	i_tmp;
 	int 	j_tmp;
 	int 	tmp;
+
+	int		wave;
 
 	int		is_i_path;
 	int		is_j_path;
