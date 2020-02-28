@@ -6,7 +6,7 @@
 /*   By: spozzi <spozzi@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 11:49:46 by spozzi            #+#    #+#             */
-/*   Updated: 2020/02/28 15:14:40 by spozzi           ###   ########.fr       */
+/*   Updated: 2020/02/28 15:26:55 by spozzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ int		set_paths(t_struct *u, int len[u->num_paths])
 
 
 
-void	send_ant(t_struct *u, int len[u->num_paths], int ant_pos[u->ants + 1])
+void	send_ant(t_struct *u, int len[u->num_paths], int ant_pos[u->ants + 1], int arrived[u->num_paths])
 {
 
 	u->j = len[u->path_i];
@@ -219,7 +219,7 @@ void	send_ant(t_struct *u, int len[u->num_paths], int ant_pos[u->ants + 1])
 			u->hm->list[u->paths[u->path_i][u->j]]->n_ants = 1;
 			u->hm->list[u->paths[u->path_i][u->j]]->ant_ID = u->ants - u->hm->list[u->src]->n_ants;
 			ant_pos[u->ants - u->hm->list[u->src]->n_ants] = u->paths[u->path_i][u->j];
-			printf("A w: %d	j: %d	ant_ID: %d	ant_pos: %d\n", u->wave, u->j, u->ants - u->hm->list[u->src]->n_ants, ant_pos[u->ants - u->hm->list[u->src]->n_ants]);
+			// printf("A w: %d	j: %d	ant_ID: %d	ant_pos: %d\n", u->wave, u->j, u->ants - u->hm->list[u->src]->n_ants, ant_pos[u->ants - u->hm->list[u->src]->n_ants]);
 		}
 		else if (u->j == len[u->path_i] && u->hm->list[u->paths[u->path_i][u->j - 1]]->n_ants != 0)
 		{
@@ -228,17 +228,19 @@ void	send_ant(t_struct *u, int len[u->num_paths], int ant_pos[u->ants + 1])
 				--u->hm->list[u->src]->n_ants;
 				ant_pos[u->ants - u->hm->list[u->src]->n_ants] = u->snk;
 				++u->hm->list[u->snk]->n_ants;
-				printf("B w: %d	j: %d	ant_ID: %d\n", u->wave, u->j, u->ants - u->hm->list[u->src]->n_ants);
-				u->wave++;
+				// printf("B w: %d	j: %d	ant_ID: %d\n", u->wave, u->j, u->ants - u->hm->list[u->src]->n_ants);
+				// u->wave++;
+				++arrived[u->path_i];
 			}
 			else if (u->j - 1 > 0)
 			{
 				ant_pos[u->hm->list[u->paths[u->path_i][u->j - 1]]->ant_ID] = u->snk;
-				printf("C w: %d	j: %d	ant_ID: %d\n", u->wave, u->j, u->hm->list[u->paths[u->path_i][u->j - 1]]->ant_ID);
+				// printf("C w: %d	j: %d	ant_ID: %d\n", u->wave, u->j, u->hm->list[u->paths[u->path_i][u->j - 1]]->ant_ID);
 				u->hm->list[u->paths[u->path_i][u->j - 1]]->n_ants = 0;
 				u->hm->list[u->paths[u->path_i][u->j - 1]]->ant_ID = 0;
 				++u->hm->list[u->snk]->n_ants;
-				u->wave++;
+				// u->wave++;
+				++arrived[u->path_i];
 			}
 		}
 		else if (u->j > 1 && u->j < len[u->path_i] && u->hm->list[u->paths[u->path_i][u->j - 1]]->n_ants != 0)
@@ -248,7 +250,7 @@ void	send_ant(t_struct *u, int len[u->num_paths], int ant_pos[u->ants + 1])
 			u->hm->list[u->paths[u->path_i][u->j]]->ant_ID = u->hm->list[u->paths[u->path_i][u->j - 1]]->ant_ID;
 			u->hm->list[u->paths[u->path_i][u->j - 1]]->n_ants = 0;
 			u->hm->list[u->paths[u->path_i][u->j - 1]]->ant_ID = 0;
-			printf("D w: %d	j: %d	ant_ID: %d\n", u->wave, u->j, u->hm->list[u->paths[u->path_i][u->j]]->ant_ID);
+			// printf("D w: %d	j: %d	ant_ID: %d\n", u->wave, u->j, u->hm->list[u->paths[u->path_i][u->j]]->ant_ID);
 		}
 		--u->j;
 	}
@@ -258,16 +260,15 @@ void	send_wave(t_struct *u, int a_t_s[u->num_paths],
 					int len[u->num_paths], int ant_pos[u->ants + 1])
 {
 	u->path_i = -1;
-	arrived[u->num_paths];
+	int arrived[u->num_paths];
 
-	u->i = -1
-	while (u->i u->num_paths)
+	u->i = -1;
+	while (++u->i < u->num_paths)
 		arrived[u->i] = 0;
 	while (++u->path_i < u->num_paths)
 	{
-		if (u->wave <= a_t_s[u->path_i])
-			send_ant(u, len, ant_pos);
-		printf("addas\n");
+		if (arrived[u->path_i] <= a_t_s[u->path_i])
+			send_ant(u, len, ant_pos, arrived);
 	}
 }
 
@@ -311,7 +312,9 @@ int		simulate(t_struct *u)
 	while (++u->i < u->num_paths)
 	{
 		ants_to_send[u->i] = -(len[u->i] - 1) + avg_p_t;
-		printf("a_t_s[i]: %d\n", ants_to_send[u->i]);
+		if (ants_to_send[u->i] < 0)
+			ants_to_send[u->i] = 0;
+		printf("a_t_s[i]: %d (%d)\n", ants_to_send[u->i], ants_rest);
 	}
 	ants_to_send[0] += ants_rest;
 	u->wave = 0;
